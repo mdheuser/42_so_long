@@ -1,0 +1,4 @@
+*.o
+extras-exclude/
+a.out
+.vscode
