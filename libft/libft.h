@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/18 16:02:06 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/02 15:20:55 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/03 11:16:59 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,6 @@ int		print_hex(unsigned long int n, char specifier);
 
 // get_next_line and its bonus
 char	*get_next_line(int fd);
-char	*get_next_line_bonus(int fd); // maybe unnecessary?? 
-									// I should either keep the original or the bonus
+char	*get_next_line_bonus(int fd); // maybe unnecessary??
 
 #endif

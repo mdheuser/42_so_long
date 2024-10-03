@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:38:06 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/03 11:14:20 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/03 11:19:10 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,4 @@ int	ft_atoi(const char *str)
 		str++;
 	}
 	return ((int)(num * sign));
-} 
-
+}

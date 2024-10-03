@@ -6,14 +6,14 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 10:39:53 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/03 10:49:37 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/03 11:18:30 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-int main()
+int	main(void)
 {
-    ft_printf("Hello World!\n");
-    return (0);
+	ft_printf("Hello World!\n");
+	return (0);
 }
