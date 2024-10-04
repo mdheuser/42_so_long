@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 10:39:53 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/03 16:34:59 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/04 16:39:15 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,30 +21,13 @@
 #define HEIGHT 512
 
 static mlx_image_t* image;
+static mlx_texture_t *texture;
 
 // -----------------------------------------------------------------------------
 
 int32_t ft_pixel(int32_t r, int32_t g, int32_t b, int32_t a)
 {
     return (r << 24 | g << 16 | b << 8 | a);
-}
-
-void ft_randomize(void* param)
-{
-	(void)param;
-	for (uint32_t i = 0; i < image->width; ++i)
-	{
-		for (uint32_t y = 0; y < image->height; ++y)
-		{
-			uint32_t color = ft_pixel(
-				rand() % 0xFF, // R
-				rand() % 0xFF, // G
-				rand() % 0xFF, // B
-				rand() % 0xFF  // A
-			);
-			mlx_put_pixel(image, i, y, color);
-		}
-	}
 }
 
 void ft_hook(void* param)
@@ -71,40 +54,38 @@ int32_t main(int argc, char **argv)
 	(void)argv;
 	(void)argc;
 	// Gotta error check this stuff
-	if (!(mlx = mlx_init(WIDTH, HEIGHT, "MLX42", true)))
+	if (!(mlx = mlx_init(WIDTH, HEIGHT, "Duck Duck Go!", true)))
 	{
-		puts(mlx_strerror(mlx_errno));
+		ft_printf("%s", mlx_strerror(mlx_errno));
 		return(EXIT_FAILURE);
 	}
-	if (!(image = mlx_new_image(mlx, 64, 64)))
-	{
-		mlx_close_window(mlx);
-		puts(mlx_strerror(mlx_errno));
-		return(EXIT_FAILURE);
-	}
-	if (mlx_image_to_window(mlx, image, 0, 0) == -1)
+	// Load PNG image as a texture
+	texture = mlx_load_png("/home/mdahlstr/Documents/so_long_github/imgs/duck.png");
+	if (!texture)
 	{
 		mlx_close_window(mlx);
-		puts(mlx_strerror(mlx_errno));
+		ft_printf("%s", mlx_strerror(mlx_errno));
 		return(EXIT_FAILURE);
 	}
-	// LOAD THE MAP
-	//char **load_map(const char *file_path);
-	mlx_loop_hook(mlx, ft_randomize, mlx);
+	// Create an image with the same dimensions as the texture
+	image = mlx_new_image(mlx, texture->width, texture->height);
+	if (!image)
+	{
+		mlx_close_window(mlx);
+		ft_printf("%s", mlx_strerror(mlx_errno));
+		return(EXIT_FAILURE);
+	}
+	// Copy the texture data into the image
+	if (!(image = mlx_texture_to_image(mlx, texture)))
+	{
+    	ft_printf("Error: Could not copy texture to image");
+    	mlx_close_window(mlx);
+    	return(EXIT_FAILURE);
+	}
+	mlx_image_to_window(mlx, image, 0, 0);
+	// Set up the hooks for key movements
 	mlx_loop_hook(mlx, ft_hook, mlx);
 	mlx_loop(mlx);
 	mlx_terminate(mlx);	
 	return (EXIT_SUCCESS);
 }
-/*
-int	main(void)
-{
-	void	*mlx;
-	//void	*mlx_win;
-
-	// mlx_t* mlx_init(int32_t width, int32_t height, const char* title, bool resize)
-	mlx = mlx_init(500, 500, "SO LONG", true);
-	//mlx_win = mlx_new_window(mlx, 1920, 1080, "Hello world!");
-	mlx_loop(mlx);
-}
-*/

@@ -6,7 +6,7 @@
 #    By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/03 10:08:59 by mdahlstr          #+#    #+#              #
-#    Updated: 2024/10/03 15:39:31 by mdahlstr         ###   ########.fr        #
+#    Updated: 2024/10/04 15:14:06 by mdahlstr         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -I./mlx/include -Iincludes
 
 # Source files
-SRCS = ./srcs/main.c ./srcs/open_map.c
+SRCS = ./srcs/main.c
 
 # Object files (replace .c with .o)
 SO_LONG_OBJS = $(SRCS:.c=.o)

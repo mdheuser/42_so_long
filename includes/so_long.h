@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 14:50:02 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/03 15:32:27 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/04 16:58:28 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,6 @@ typedef struct s_data
 
 from: https://reactive.so/post/42-a-comprehensive-guide-to-so_long/ */
 
-char **load_map(const char *file_path);
+// char **load_map(const char *file_path);
 
 #endif
