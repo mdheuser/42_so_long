@@ -6,17 +6,18 @@
 #    By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/03 10:08:59 by mdahlstr          #+#    #+#              #
-#    Updated: 2024/10/04 15:14:06 by mdahlstr         ###   ########.fr        #
+#    Updated: 2024/10/14 15:15:49 by mdahlstr         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-# Config: name of executable, compiler and its flags                  
+# Config: name of executable, compiler and flags                  
 NAME = so_long
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I./mlx/include -Iincludes
 
-# Source files
-SRCS = ./srcs/main.c
+# Source files // I can use "addprefix" to mention "./src" only once.
+# SRCS = ./src/main.c ./src/command_line_args.c # ./src/open_map.c
+SRCS = ./src/main.c
 
 # Object files (replace .c with .o)
 SO_LONG_OBJS = $(SRCS:.c=.o)
@@ -42,7 +43,7 @@ MLXLIB_FLAGS = -ldl -lglfw -lm
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Build the libft library
-$(LIBFT_DIR)/libft.a: $(LIBFT_OBJS)
+$(LIBFT_DIR)/libft.a: # $(LIBFT_OBJS)
 	$(MAKE) -C $(LIBFT_DIR)
 
 # Clone MLX42, generate build files with CMake, and build it
@@ -54,7 +55,7 @@ $(MLX42_LIB):
 	cmake --build $(MLX42_BUILD_DIR)
 
 # Rule to create the executable
-$(NAME): $(SO_LONG_OBJS) $(LIBFT_OBJS)
+$(NAME): $(SO_LONG_OBJS) $(LIBFT_DIR)/libft.a
 	$(CC) $(CFLAGS) -o $(NAME) $(SO_LONG_OBJS) \
 	-L$(LIBFT_DIR) -lft -L$(MLX42_BUILD_DIR) -lmlx42 $(MLXLIB_FLAGS)
 

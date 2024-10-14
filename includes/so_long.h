@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 14:50:02 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/04 16:58:28 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/14 20:29:20 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,60 @@
 # include <fcntl.h> // For open
 # include <math.h> // For math library functions (link with -lm)
 
-/*
-typedef struct s_data
+# define SPACE			'0'
+# define WALL			'1'
+# define COLLECTIBLE	'C'
+# define EXIT			'E'
+# define PLAYER			'P'
+
+# define TILESIZE		64
+
+typedef struct	s_position
+{
+	int	x;
+	int	y;
+} t_position;
+
+typedef struct s_textures
+{
+	mlx_texture_t	*background;
+	mlx_texture_t	*wall;
+	mlx_texture_t	*collectible;
+	mlx_texture_t	*character;
+	mlx_texture_t	*exit;
+	mlx_texture_t	*exit_open;
+}	t_textures;
+
+typedef struct s_images {
+	mlx_image_t	*background;
+	mlx_image_t	*wall;
+	mlx_image_t	*collectible;
+	mlx_image_t	*character;
+	mlx_image_t	*exit;
+	mlx_image_t	*exit_open;
+}	t_images;
+
+typedef struct	s_map
+{
+	char	**full;
+	t_position	player;
+} t_map;
+
+typedef struct s_game
 {
 	void		*mlx_ptr; // MLX pointer
 	void		*win_ptr; // MLX window pointer
-	void		*textures[5]; // MLX image pointers (on the stack)
+	t_textures	*textures; // MLX image pointers (on the stack)
+	t_images	*images;
 	t_map		*map; // Map pointer (contains map details - preferably kept on the stack)
-}	t_data;
+	int			map_width;
+	int			map_height;
+}	t_game;
 
+//void    parse_command_line_args(int argc, char  **argv, t_game *game);
+//void    close_game(t_game *game);
+
+/*
 from: https://reactive.so/post/42-a-comprehensive-guide-to-so_long/ */
 
 // char **load_map(const char *file_path);
