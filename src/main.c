@@ -6,13 +6,26 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 14:58:48 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/14 21:30:16 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/14 21:44:24 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-// layer movement must update the map->full array. 
+// Player movement must update the map->full array.
+/*
+To add movement to your game, you need to capture key press events and update 
+the player's position on the map accordingly. You can follow these steps:
+
+1 . Handle Key Press Events: Use MLX42's event handling to detect when specific keys 
+are pressed.
+2 . Move the Player: Adjust the player's position based on the key press while 
+checking for collisions (walls or boundaries).
+3 . Redraw the Map: After moving the player, redraw the map to reflect the new 
+position.
+4 . Add the key hook to the main function
+Finally, add the key hook to your main function so that you can detect key presses and move the player accordingly:
+*/
 
 void ft_hook(void* param, t_game *game)
 {
@@ -66,14 +79,25 @@ void    render_game(t_game *game)
                 mlx_image_to_window(game->mlx_ptr, game->images->background, x * TILESIZE, y * TILESIZE);
             else if (tile == COLLECTIBLE) // Collectible
                 mlx_image_to_window(game->mlx_ptr, game->images->collectible, x * TILESIZE, y * TILESIZE);
-            else if (tile == PLAYER) // Player
-                mlx_image_to_window(game->mlx_ptr, game->images->character, x * TILESIZE, y * TILESIZE);
             else if (tile == EXIT) // Exit
                 mlx_image_to_window(game->mlx_ptr, game->images->exit, x * TILESIZE, y * TILESIZE);
+            else if (tile == PLAYER) // Player
+            {
+                mlx_image_to_window(game->mlx_ptr, game->images->character, x * TILESIZE, y * TILESIZE);
+                // here I can initialise the player's position.
+                // Changes in this position are handled in another function
+                // Better to only update the positions that are changed:
+                // Player, collectibles, exit (update_map??)
+            }
             x++;
         }
         y++;
     }
+}
+
+void    update_map(t_game game)
+{
+    XXXXXX
 }
 /*
 new_player_position(t_game game)
