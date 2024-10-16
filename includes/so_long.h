@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 14:50:02 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/14 20:29:20 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/16 17:43:18 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <fcntl.h> // For open
 # include <math.h> // For math library functions (link with -lm)
 
-# define SPACE			'0'
+# define BACKGROUND		'0'
 # define WALL			'1'
 # define COLLECTIBLE	'C'
 # define EXIT			'E'
@@ -57,7 +57,7 @@ typedef struct s_images {
 
 typedef struct	s_map
 {
-	char	**full;
+	char		**full;
 	t_position	player;
 } t_map;
 
@@ -70,6 +70,8 @@ typedef struct s_game
 	t_map		*map; // Map pointer (contains map details - preferably kept on the stack)
 	int			map_width;
 	int			map_height;
+	int			score; // initialise it to 0 somewhere! ///////////////////////////////////////// TO DO
+	int			collectible_count; // initialise it to 0 somewhere! ///////////////////////////////////////// TO DO
 }	t_game;
 
 //void    parse_command_line_args(int argc, char  **argv, t_game *game);
