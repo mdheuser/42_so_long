@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 14:58:48 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/16 19:17:51 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/17 21:24:12 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,15 +29,20 @@ Finally, add the key hook to your main function so that you can detect key press
 
 void    render_game(t_game *game);
 void    find_character_position(t_game *game);
-void    initialise_score(t_game *game);
+void    initialise_game(t_game *game);
+
+int    count_moves(t_game *game)
+{
+    return(game->move_count++);
+}
 
 ////////////////////////////////////////////////////////////////////////////// TEMPORARY DEBUGGING
-void print_map(t_map *map, int map_height)
+void print_map(t_game *game)
 {
     int y = 0;
-    while (y < map_height)
+    while (y < game->map_height)
     {
-        ft_printf("%s\n", map->full[y]);
+        ft_printf("%s\n", game->map->full[y]);
         y++;
     }
 }
@@ -55,69 +60,83 @@ void    count_collectibles(t_game *game)
         while (game->map->full[i][j] != '\0' && game->map->full[i][j] != '\n')
         {
             if (game->map->full[i][j] == COLLECTIBLE)
-            {
                 game->collectible_count++;
-                ft_printf("collectible count: %d\n", game->collectible_count);
-            }
             j++;
         }
         i++;
     }
+    ft_printf("\ncollectible count: %d\n", game->collectible_count);
 }
 
-void    initialise_score(t_game *game)
+void    initialise_game(t_game *game)
 {
-    game->score = 0;
+    count_collectibles(game);
+    game->score = game->collectible_count;
+    game->move_count = 0;
 }
 
-void clear_old_position(t_game *game, int old_y, int old_x, char old_tile)
+void clear_old_position(t_game *game, int old_y, int old_x)
 {
-    if (old_tile == BACKGROUND)  // Check if the old tile was background
-    {
+    if (game->map->full[old_y][old_x] == BACKGROUND)
         mlx_image_to_window(game->mlx_ptr, game->images->background, old_x * TILESIZE, old_y * TILESIZE);
-        game->map->full[old_y][old_x] = BACKGROUND;
-    }
-    else if (old_tile == COLLECTIBLE)
-    {
-        mlx_image_to_window(game->mlx_ptr, game->images->collectible, old_x * TILESIZE, old_y * TILESIZE);
-        game->map->full[old_y][old_x] = BACKGROUND;
-    }
-    else if (old_tile == EXIT)
-    {
+    else if (game->map->full[old_y][old_x] == EXIT)
         mlx_image_to_window(game->mlx_ptr, game->images->exit, old_x * TILESIZE, old_y * TILESIZE);
-        game->map->full[old_y][old_x] = EXIT;
-    }
+    print_map(game);
 }
 
 void    set_new_position(t_game *game, int new_y, int new_x)
 {
-    mlx_image_to_window(game->mlx_ptr, game->images->character, new_x * TILESIZE, new_y * TILESIZE);
     game->map->full[new_y][new_x] = PLAYER;
+    render_game(game);
+    //mlx_image_to_window(game->mlx_ptr, game->images->character, new_x * TILESIZE, new_y * TILESIZE);
+    game->map->player.x = new_x;
+    game->map->player.y = new_y;
+}
+
+void    open_exit(t_game *game)
+{
+    //mlx_image_to_window(game->mlx_ptr, game->images->exit_open, x * TILESIZE, y * TILESIZE);
+    game->map->full[game->map->exit.y][game->map->exit.x] = EXIT_OPEN;
 }
 
 void    update_character_position(t_game *game, int new_x, int new_y)
 {
     int     old_x;
     int     old_y;
-    char    old_tile;
+    //char    old_tile;
     char    new_tile;
 
     old_x = game->map->player.x;
     old_y = game->map->player.y;
-    old_tile = game->map->full[old_y][old_x];
+    //old_tile = game->map->full[old_y][old_x];
     new_tile = game->map->full[new_y][new_x];
-    clear_old_position(game, old_y, old_x, old_tile);
-    game->map->player.x = new_x;
-    game->map->player.y = new_y;
+    set_new_position(game, new_y, new_x);
+    //clear_old_position(game, old_y, old_x);
+
+    // turn this into the "SCORE" function
     if (new_tile == COLLECTIBLE)
     {
-        game->score++;
-        if (game->score == game->collectible_count)
-            ft_printf("\n\nYou've killed ALL Pac-Men!\n\n");
+        game->score--;
+        if (game->score == 0)
+        {
+            open_exit(game);
+            ft_printf("\n\nYou've killed ALL Pac-Men!\nWell done!\n");
+        }
         else
-            ft_printf("You've killed %d Pac-Men. Well done!\n", game->score);
+            ft_printf("%d out of %d Pac-Men killed.\n", game->score, game->collectible_count);
     }
-    set_new_position(game, new_y, new_x);
+    else if (new_tile == EXIT_OPEN)
+    {
+        if (game->score == 0)
+        {
+            ft_printf("Good ghost.\nYou've finished the game with XX moves.\n");
+            exit(EXIT_SUCCESS);
+        }   
+    }
+    //set_new_position(game, new_y, new_x);
+    clear_old_position(game, old_y, old_x);
+    //render_game(game);
+    //ft_printf("Moves: %d\n", count_moves(game));
 }
 
 void    find_character_position(t_game *game)
@@ -135,6 +154,7 @@ void    find_character_position(t_game *game)
             {
                 game->map->player.x = j;
                 game->map->player.y = i;
+                ft_printf("Initial character position: x = %d, y = %d\n", game->map->player.x, game->map->player.y);
                 break ;
             }
             j++;
@@ -147,19 +167,11 @@ int can_move(t_game *game, int new_x, int new_y)
 {
     if (new_y < 0 || new_y >= game->map_height || new_x < 0 || new_x >= game->map_width)
         return (0);
-    if (game->map->full[new_y][new_x] == WALL)
+    else if (game->map->full[new_y][new_x] == WALL)
     {
-        ft_printf("You cannot go through walls!\r");
+        ft_printf("You cannot go through walls!                     \r");
         return (0);
     }
-    else if (game->map->full[new_y][new_x] == COLLECTIBLE)
-    {
-        
-        // increase collectible variable.
-        
-    }
-    //else if (game->map->full[tile_y][tile_x] == EXIT)
-        // do nothing
     return (1);
 }
 
@@ -185,7 +197,6 @@ void ft_hook(void *param)
     if (can_move(game, new_x, new_y))
     {
         update_character_position(game, new_x, new_y);
-        render_game(game);
         ft_printf("New player position: x = %d, y = %d\r", new_x, new_y);  // Debugging line
     }
 }
@@ -234,6 +245,8 @@ size_t     get_map_dimensions(int fd, size_t *width)
     return (height);
 }
 
+
+// create separate functions for each item and call them all at once or one by one.
 void    render_game(t_game *game)
 {
     int     x;
@@ -263,19 +276,25 @@ void    render_game(t_game *game)
             tile = game->map->full[y][x];
             if (tile == WALL) // Wall
                 mlx_image_to_window(game->mlx_ptr, game->images->wall, x * TILESIZE, y * TILESIZE);
-            else if (tile == BACKGROUND) // Empty space
+            else if (tile == BACKGROUND || tile == PLAYER) // Empty space and Character background ???
                 mlx_image_to_window(game->mlx_ptr, game->images->background, x * TILESIZE, y * TILESIZE);
             else if (tile == COLLECTIBLE) // Collectible
                 mlx_image_to_window(game->mlx_ptr, game->images->collectible, x * TILESIZE, y * TILESIZE);
             else if (tile == EXIT) // Exit
+            {
                 mlx_image_to_window(game->mlx_ptr, game->images->exit, x * TILESIZE, y * TILESIZE);
-            //else if (tile == PLAYER) // Player
-            //    mlx_image_to_window(game->mlx_ptr, game->images->character, x * TILESIZE, y * TILESIZE);
+                game->map->exit.x = x;
+                game->map->exit.y = y;
+            }
+            else if (tile == EXIT_OPEN) // Exit OPEN
+                mlx_image_to_window(game->mlx_ptr, game->images->exit_open, x * TILESIZE, y * TILESIZE);
             x++;
         }
         y++;
-    mlx_image_to_window(game->mlx_ptr, game->images->character, game->map->player.x * TILESIZE, game->map->player.y * TILESIZE);
     }
+    // ADD PLAYER IMAGE
+    mlx_image_to_window(game->mlx_ptr, game->images->character, game->map->player.x * TILESIZE, game->map->player.y * TILESIZE);
+    
 }
 
 void    load_images(t_game *game)
@@ -293,7 +312,7 @@ void    load_images(t_game *game)
     !game->textures->exit || !game->textures->exit_open) 
     {
         ft_printf("Error loading textures\n");
-        return;
+        return ;
     }
     game->images = ft_calloc(1, sizeof(t_images));
     game->images->background = mlx_texture_to_image(game->mlx_ptr, game->textures->background);
@@ -374,7 +393,7 @@ int main(int argc, char **argv)
         i++;
     }
     //////////////////////////////////////////////////////////////////////////////
-    print_map(game->map, height);
+    print_map(game);
     /////////////////////////////////////////////////////////////////////////////////
     game->mlx_ptr = mlx_init((game->map_width) * TILESIZE, game->map_height * TILESIZE, "~~~~~~ Pac-Ghost ~~~~~~", false);
     if (!game->mlx_ptr)
@@ -383,8 +402,7 @@ int main(int argc, char **argv)
         close(fd);
         return (1);
     }
-    initialise_score(game);
-    count_collectibles(game);
+    initialise_game(game);
     find_character_position(game);
     load_images(game);
     mlx_loop_hook(game->mlx_ptr, ft_hook, game);

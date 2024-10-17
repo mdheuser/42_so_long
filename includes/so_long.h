@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 14:50:02 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/16 17:43:18 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/17 21:12:59 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # define COLLECTIBLE	'C'
 # define EXIT			'E'
 # define PLAYER			'P'
+
+# define EXIT_OPEN		'X'
 
 # define TILESIZE		64
 
@@ -59,6 +61,7 @@ typedef struct	s_map
 {
 	char		**full;
 	t_position	player;
+	t_position	exit;
 } t_map;
 
 typedef struct s_game
@@ -72,6 +75,7 @@ typedef struct s_game
 	int			map_height;
 	int			score; // initialise it to 0 somewhere! ///////////////////////////////////////// TO DO
 	int			collectible_count; // initialise it to 0 somewhere! ///////////////////////////////////////// TO DO
+	int			move_count;
 }	t_game;
 
 //void    parse_command_line_args(int argc, char  **argv, t_game *game);
