@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 14:50:02 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/17 21:12:59 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/18 12:40:03 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,13 @@
 # define EXIT_OPEN		'X'
 
 # define TILESIZE		64
+// # define MOVE_DELAY		10
 
 typedef struct	s_position
 {
-	int	x;
-	int	y;
+	int		x;
+	int		y;
+	char	standing_on;
 } t_position;
 
 typedef struct s_textures
@@ -76,6 +78,7 @@ typedef struct s_game
 	int			score; // initialise it to 0 somewhere! ///////////////////////////////////////// TO DO
 	int			collectible_count; // initialise it to 0 somewhere! ///////////////////////////////////////// TO DO
 	int			move_count;
+	// int			move_cooldown;
 }	t_game;
 
 //void    parse_command_line_args(int argc, char  **argv, t_game *game);

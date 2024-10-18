@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 14:58:48 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/17 21:24:12 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/18 15:45:11 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,36 @@ position.
 Finally, add the key hook to your main function so that you can detect key presses and move the player accordingly:
 */
 
-void    render_game(t_game *game);
+void    render_map(t_game *game);
 void    find_character_position(t_game *game);
 void    initialise_game(t_game *game);
+void    render_background(t_game *game, int y, int x);
+void    render_walls(t_game *game, int y, int x);
+void    render_collectibles(t_game *game, int y, int x);
+void    render_exit(t_game *game, int y, int x);
+void    render_player(t_game *game);
+void    free_resources(t_game *game);
+void    count_moves(t_game *game);
 
-int    count_moves(t_game *game)
+void    free_resources(t_game *game)
+{   
+    int i;
+
+    i = 0;
+    while (game->map->full[i] != NULL)
+    {
+        free(game->map->full[i]);
+        i++;
+    }
+    free(game->map->full);
+    free(game);
+    mlx_terminate(game->mlx_ptr);
+}
+
+
+void    count_moves(t_game *game)
 {
-    return(game->move_count++);
+    game->move_count++;
 }
 
 ////////////////////////////////////////////////////////////////////////////// TEMPORARY DEBUGGING
@@ -75,70 +98,96 @@ void    initialise_game(t_game *game)
     game->move_count = 0;
 }
 
-void clear_old_position(t_game *game, int old_y, int old_x)
+void    clear_old_position(t_game *game, int old_y, int old_x)
 {
-    if (game->map->full[old_y][old_x] == BACKGROUND)
-        mlx_image_to_window(game->mlx_ptr, game->images->background, old_x * TILESIZE, old_y * TILESIZE);
-    else if (game->map->full[old_y][old_x] == EXIT)
-        mlx_image_to_window(game->mlx_ptr, game->images->exit, old_x * TILESIZE, old_y * TILESIZE);
-    print_map(game);
+    char old_tile;
+    
+    //old_tile = game->map->full[game->map->player.y][game->map->player.x];
+    //old_tile = game->map->full[old_y][old_x];
+    old_tile = game->map->player.standing_on;
+    if (old_tile == BACKGROUND || old_tile == COLLECTIBLE)
+        render_background(game, old_y, old_x);
+    else if (old_tile == EXIT || old_tile == EXIT_OPEN)
+        render_exit(game, old_y, old_x);
+    
+    print_map(game); //////////////////////////////////////////////////DEBUGGING
 }
 
 void    set_new_position(t_game *game, int new_y, int new_x)
 {
-    game->map->full[new_y][new_x] = PLAYER;
-    render_game(game);
-    //mlx_image_to_window(game->mlx_ptr, game->images->character, new_x * TILESIZE, new_y * TILESIZE);
+    // Update what was under the player before moving
+    game->map->player.standing_on = game->map->full[new_y][new_x];
+    
+    // Update player position
     game->map->player.x = new_x;
     game->map->player.y = new_y;
+
+    // Render player at new position
+    render_player(game);
+    //count_moves(game); // something is wrong
 }
 
 void    open_exit(t_game *game)
 {
-    //mlx_image_to_window(game->mlx_ptr, game->images->exit_open, x * TILESIZE, y * TILESIZE);
-    game->map->full[game->map->exit.y][game->map->exit.x] = EXIT_OPEN;
+    int exit_x;
+    int exit_y;
+
+    exit_x = game->map->exit.x;
+    exit_y = game->map->exit.y;
+    game->map->full[exit_y][exit_x] = EXIT_OPEN;
+    render_exit(game, exit_y, exit_x);
+}
+
+void    keep_score(t_game *game)
+{
+    int x;
+    int y;
+
+    x = game->map->player.x;
+    y = game->map->player.y;
+    game->score--;
+    game->map->full[y][x] = BACKGROUND; // Replace 'C' with '0'
+    if (game->score == 0)
+    {
+        open_exit(game);
+        ft_printf("\n\nYou've killed ALL Pac-Men!\nWell done!\n");
+    }
+    else
+        ft_printf("%d out of %d Pac-Men killed.\n", game->score, game->collectible_count);
+}
+
+void    win_game(t_game *game)
+{
+    if (game->score == 0)
+    {
+        ft_printf("Good ghost.\nYou've finished the game with %d moves.\n", game->move_count);
+        exit(EXIT_SUCCESS);
+    }   
 }
 
 void    update_character_position(t_game *game, int new_x, int new_y)
 {
     int     old_x;
     int     old_y;
-    //char    old_tile;
     char    new_tile;
 
     old_x = game->map->player.x;
     old_y = game->map->player.y;
-    //old_tile = game->map->full[old_y][old_x];
     new_tile = game->map->full[new_y][new_x];
+    ft_printf("Current Position: x = %d, y = %d\n", old_x, old_y);
+    clear_old_position(game, old_y, old_x);
     set_new_position(game, new_y, new_x);
-    //clear_old_position(game, old_y, old_x);
-
-    // turn this into the "SCORE" function
     if (new_tile == COLLECTIBLE)
     {
-        game->score--;
-        if (game->score == 0)
-        {
-            open_exit(game);
-            ft_printf("\n\nYou've killed ALL Pac-Men!\nWell done!\n");
-        }
-        else
-            ft_printf("%d out of %d Pac-Men killed.\n", game->score, game->collectible_count);
+        keep_score(game);
+        game->map->player.standing_on = BACKGROUND;
     }
     else if (new_tile == EXIT_OPEN)
-    {
-        if (game->score == 0)
-        {
-            ft_printf("Good ghost.\nYou've finished the game with XX moves.\n");
-            exit(EXIT_SUCCESS);
-        }   
-    }
-    //set_new_position(game, new_y, new_x);
-    clear_old_position(game, old_y, old_x);
-    //render_game(game);
-    //ft_printf("Moves: %d\n", count_moves(game));
+        win_game(game);
+    ft_printf("Updated Position: x = %d, y = %d\n", new_x, new_y);
 }
 
+// ATTENTION! This function also turns the initial character position into a background tile!
 void    find_character_position(t_game *game)
 {
     int i;
@@ -154,13 +203,15 @@ void    find_character_position(t_game *game)
             {
                 game->map->player.x = j;
                 game->map->player.y = i;
+                game->map->player.standing_on = BACKGROUND;
                 ft_printf("Initial character position: x = %d, y = %d\n", game->map->player.x, game->map->player.y);
-                break ;
+                return ;
             }
             j++;
         }
     i++;
     }
+    ft_printf("Character not found in the map.\n");
 }
 
 int can_move(t_game *game, int new_x, int new_y)
@@ -184,6 +235,13 @@ void ft_hook(void *param)
     game = (t_game *)param;
     new_x = game->map->player.x;
     new_y = game->map->player.y;
+    /*
+    if (game->move_cooldown > 0)
+    {
+        game->move_cooldown--;  // Decrement cooldown and skip movement
+        return;
+    }
+    */
     if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_ESCAPE))
 		mlx_close_window(game->mlx_ptr);
 	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_UP))
@@ -199,6 +257,7 @@ void ft_hook(void *param)
         update_character_position(game, new_x, new_y);
         ft_printf("New player position: x = %d, y = %d\r", new_x, new_y);  // Debugging line
     }
+    //game->move_cooldown = MOVE_DELAY;
 }
 
 size_t     get_map_dimensions(int fd, size_t *width)
@@ -211,11 +270,10 @@ size_t     get_map_dimensions(int fd, size_t *width)
     if (!line)
         return (0);
     line_len = ft_strlen(line);
-    if (line[line_len - 1] == '\n') // Exclude newline from width
+    if (line[line_len - 1] == '\n')
         line_len--;
     ft_printf("Line width: %d\n", line_len); // Debugging line
     *width = line_len;
-    // Check if width is valid (non-zero)
     if (*width == 0)
     {
         free(line);
@@ -241,60 +299,88 @@ size_t     get_map_dimensions(int fd, size_t *width)
     }
     // Print dimensions for debugging
     ft_printf("Map dimensions: height = %d, width = %d\n", height, *width);
-    
     return (height);
 }
 
 
 // create separate functions for each item and call them all at once or one by one.
-void    render_game(t_game *game)
+/*
+Layered Rendering Approach:
+Render Floor: For every tile in the map, first render the floor.
+Render Static Elements: Then, for the same tile, render static objects (walls, collectibles, exits) if present.
+Render Player: Finally, render the player on top of everything, since the player is a dynamic element that can move around.
+*/
+
+void    render_background(t_game *game, int y, int x)
+{
+    mlx_image_to_window(game->mlx_ptr, game->images->background, x * TILESIZE, y * TILESIZE);
+}
+
+void    render_walls(t_game *game, int y, int x)
+{
+    mlx_image_to_window(game->mlx_ptr, game->images->wall, x * TILESIZE, y * TILESIZE);
+}
+
+void    render_collectibles(t_game *game, int y, int x)
+{
+    mlx_image_to_window(game->mlx_ptr, game->images->collectible, x * TILESIZE, y * TILESIZE);
+}
+
+void    render_exit(t_game *game, int y, int x)
+{
+    if (game->map->full[y][x] == EXIT)
+    {
+        mlx_image_to_window(game->mlx_ptr, game->images->exit, x * TILESIZE, y * TILESIZE);
+        game->map->exit.x = x;
+        game->map->exit.y = y;
+    }
+    else if (game->map->full[y][x] == EXIT_OPEN)
+        mlx_image_to_window(game->mlx_ptr, game->images->exit_open, x * TILESIZE, y * TILESIZE);
+}
+
+void    render_player(t_game *game)
+{
+    mlx_image_to_window(game->mlx_ptr, game->images->character, game->map->player.x * TILESIZE, game->map->player.y * TILESIZE);
+}
+
+
+void    render_map(t_game *game)
 {
     int     x;
     int     y;
     char    tile;
 
-    // Clear the window with the background image first
-    /*
+    // Clear the window with the background image first (EVERY POSITION)
     y = 0;
     while (y < game->map_height)
     {
         x = 0;
         while (x < game->map_width)
         {
-            mlx_image_to_window(game->mlx_ptr, game->images->background, x * TILESIZE, y * TILESIZE);
+            render_background(game, y, x);
             x++;
         }
         y++;
     }
-    */
     y = 0;
+    // render walls, collectibles and exit
     while (y < game->map_height)
     {   
         x = 0;
         while (x < game->map_width)
         {
             tile = game->map->full[y][x];
-            if (tile == WALL) // Wall
-                mlx_image_to_window(game->mlx_ptr, game->images->wall, x * TILESIZE, y * TILESIZE);
-            else if (tile == BACKGROUND || tile == PLAYER) // Empty space and Character background ???
-                mlx_image_to_window(game->mlx_ptr, game->images->background, x * TILESIZE, y * TILESIZE);
-            else if (tile == COLLECTIBLE) // Collectible
-                mlx_image_to_window(game->mlx_ptr, game->images->collectible, x * TILESIZE, y * TILESIZE);
-            else if (tile == EXIT) // Exit
-            {
-                mlx_image_to_window(game->mlx_ptr, game->images->exit, x * TILESIZE, y * TILESIZE);
-                game->map->exit.x = x;
-                game->map->exit.y = y;
-            }
-            else if (tile == EXIT_OPEN) // Exit OPEN
-                mlx_image_to_window(game->mlx_ptr, game->images->exit_open, x * TILESIZE, y * TILESIZE);
+            if (tile == WALL)
+                render_walls(game, y, x);
+            else if (tile == COLLECTIBLE)
+                render_collectibles(game, y, x);
+            else if (tile == EXIT || tile == EXIT_OPEN)
+                render_exit(game, y, x);
             x++;
         }
         y++;
     }
-    // ADD PLAYER IMAGE
-    mlx_image_to_window(game->mlx_ptr, game->images->character, game->map->player.x * TILESIZE, game->map->player.y * TILESIZE);
-    
+    render_player(game);
 }
 
 void    load_images(t_game *game)
@@ -304,6 +390,10 @@ void    load_images(t_game *game)
     game->textures->wall = mlx_load_png("imgs/bw_walls2.png");
     game->textures->collectible = mlx_load_png("imgs/bw_pacman2.png");
     game->textures->character = mlx_load_png("imgs/bw_ghost2.png");
+    if (!game->textures->character) 
+    {
+        ft_printf("Error: Could not load character texture\n"); // probably unnecessary
+    }
     game->textures->exit = mlx_load_png("imgs/bw_exit1.png");
     game->textures->exit_open = mlx_load_png("imgs/bw_exit2.png");
     
@@ -311,7 +401,7 @@ void    load_images(t_game *game)
     !game->textures->collectible || !game->textures->character || 
     !game->textures->exit || !game->textures->exit_open) 
     {
-        ft_printf("Error loading textures\n");
+        ft_printf("Error\nError loading textures\n");
         return ;
     }
     game->images = ft_calloc(1, sizeof(t_images));
@@ -329,6 +419,13 @@ void    load_images(t_game *game)
 	mlx_delete_texture(game->textures->exit_open);
 }
 
+void start_game(t_game *game)
+{
+    render_map(game);
+    find_character_position(game);
+    game->map->full[game->map->player.y][game->map->player.y] = BACKGROUND; // change player position to background only after rendering player.
+}
+
 int main(int argc, char **argv)
 {
     char    *map_line;
@@ -337,8 +434,7 @@ int main(int argc, char **argv)
     int     i;
     size_t  height;
     size_t  width;
-    char    *map_file = "maps/map_valid1.ber";
-
+    char    *map_file = "maps/map_valid2.ber";
     //if (argc != 2)
     //{
     //    ft_printf("Error: Too many or too few arguments\n");
@@ -347,7 +443,6 @@ int main(int argc, char **argv)
     //fd = open(argv[1], O_RDONLY);
     (void)argc;
     (void)argv;
-    //fd = open("maps/map_valid.ber", O_RDONLY);
     fd = open(map_file, O_RDONLY);
     if (fd <= 0)
     {
@@ -373,6 +468,13 @@ int main(int argc, char **argv)
     game->map_height = height;
     // Rewind the file descriptor to read the map data /// WHAT IS THIS?
     close(fd);
+    game->mlx_ptr = mlx_init((game->map_width) * TILESIZE, game->map_height * TILESIZE, "~~~~~~ Pac-Ghost ~~~~~~", false);
+    if (!game->mlx_ptr)
+    {
+        free(game);
+        close(fd);
+        return (1);
+    }
     fd = open(map_file, O_RDONLY);  // Reopen the file 
     i = 0;
     while (i < game->map_height)
@@ -381,8 +483,7 @@ int main(int argc, char **argv)
         map_line = get_next_line(fd);
         if (map_line)
         {
-            //ft_strncpy(game->map->full[i], map_line, game->map_width);
-            ft_strlcpy(game->map->full[i], map_line, game->map_width + 1); // the +1 was missing and causing the map to be copied wrong to the array
+            ft_strlcpy(game->map->full[i], map_line, game->map_width + 1);
             free(map_line);
         }
         else
@@ -395,18 +496,13 @@ int main(int argc, char **argv)
     //////////////////////////////////////////////////////////////////////////////
     print_map(game);
     /////////////////////////////////////////////////////////////////////////////////
-    game->mlx_ptr = mlx_init((game->map_width) * TILESIZE, game->map_height * TILESIZE, "~~~~~~ Pac-Ghost ~~~~~~", false);
-    if (!game->mlx_ptr)
-    {
-        free(game);
-        close(fd);
-        return (1);
-    }
-    initialise_game(game);
-    find_character_position(game);
+    
     load_images(game);
+    initialise_game(game);
+    start_game(game);
     mlx_loop_hook(game->mlx_ptr, ft_hook, game);
     mlx_loop(game->mlx_ptr);
+    free_resources(game);
     close(fd);
     return (0);
 }
