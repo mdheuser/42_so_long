@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 14:50:02 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/18 12:40:03 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/21 13:40:20 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ typedef struct	s_map
 {
 	char		**full;
 	t_position	player;
+	t_position	tiles_to_render;
 	t_position	exit;
 } t_map;
 

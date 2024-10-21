@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 14:58:48 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/18 15:45:11 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/21 14:13:54 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ position.
 Finally, add the key hook to your main function so that you can detect key presses and move the player accordingly:
 */
 
-void    render_map(t_game *game);
+//void    render_map(t_game *game);
+void    render_map(t_game *game, t_position start, t_position end);
 void    find_character_position(t_game *game);
 void    initialise_game(t_game *game);
 void    render_background(t_game *game, int y, int x);
@@ -169,6 +170,31 @@ void    update_character_position(t_game *game, int new_x, int new_y)
 {
     int     old_x;
     int     old_y;
+    char    old_tile;
+    //char    new_tile;
+
+    old_x = game->map->player.x;
+    old_y = game->map->player.y;
+    render_background(game, old_y, old_x);
+    old_tile = game->map->full[old_y][old_x];
+    if (old_tile == COLLECTIBLE)
+        render_collectibles(game, old_y, old_x);
+    else if (old_tile == EXIT || old_tile == EXIT_OPEN)
+        render_exit(game, old_y, old_x);
+    else if (old_tile == WALL)
+        render_walls(game, old_y, old_x);
+    //else if (old_tile == EXIT_OPEN)
+    //    win_game(game);
+    ft_printf("Updated Position: x = %d, y = %d\n", new_x, new_y);
+    // Render the new player position
+    render_player(game);    
+}
+
+/*
+void    update_character_position(t_game *game, int new_x, int new_y)
+{
+    int     old_x;
+    int     old_y;
     char    new_tile;
 
     old_x = game->map->player.x;
@@ -186,6 +212,7 @@ void    update_character_position(t_game *game, int new_x, int new_y)
         win_game(game);
     ft_printf("Updated Position: x = %d, y = %d\n", new_x, new_y);
 }
+*/
 
 // ATTENTION! This function also turns the initial character position into a background tile!
 void    find_character_position(t_game *game)
@@ -343,7 +370,37 @@ void    render_player(t_game *game)
     mlx_image_to_window(game->mlx_ptr, game->images->character, game->map->player.x * TILESIZE, game->map->player.y * TILESIZE);
 }
 
+void    render_map(t_game *game, t_position start, t_position end)
+{
+    int     x;
+    int     y;
+    char    tile;
 
+    // Clear the window with the background image first (EVERY POSITION)
+    y = start.y;
+    while (y <= end.y)
+    {
+        x = start.x;
+        while (x <= end.x)
+        {
+            tile = game->map->full[y][x];
+            // Always render the background first
+            render_background(game, y, x);
+            // Then render the other elements based on the tile type
+            if (tile == WALL)
+                render_walls(game, y, x);
+            else if (tile == COLLECTIBLE)
+                render_collectibles(game, y, x);
+            else if (tile == EXIT || tile == EXIT_OPEN)
+                render_exit(game, y, x);
+            x++;
+        }
+        y++;
+    }
+    render_player(game);
+}
+
+/*
 void    render_map(t_game *game)
 {
     int     x;
@@ -382,6 +439,7 @@ void    render_map(t_game *game)
     }
     render_player(game);
 }
+*/
 
 void    load_images(t_game *game)
 {
@@ -421,9 +479,18 @@ void    load_images(t_game *game)
 
 void start_game(t_game *game)
 {
-    render_map(game);
+    t_position  start;
+    t_position  end;
+    
+    start.x = 0;
+    start.y = 0;
+    end.x = game->map_width;
+    end.y = game->map_height;
+    
     find_character_position(game);
-    game->map->full[game->map->player.y][game->map->player.y] = BACKGROUND; // change player position to background only after rendering player.
+    render_map(game, start, end);
+    
+    //game->map->full[game->map->player.y][game->map->player.y] = BACKGROUND; // change player position to background only after rendering player.
 }
 
 int main(int argc, char **argv)
@@ -500,8 +567,11 @@ int main(int argc, char **argv)
     load_images(game);
     initialise_game(game);
     start_game(game);
-    mlx_loop_hook(game->mlx_ptr, ft_hook, game);
-    mlx_loop(game->mlx_ptr);
+    //mlx_loop_hook(game->mlx_ptr, ft_hook, game);
+    //mlx_loop(game->mlx_ptr);
+    mlx_hook(game->win_ptr, 2, 0, ft_hook, game);  // Hook for key presses
+    //mlx_loop_hook(game->mlx_ptr, ft_hook, game);           // Hook for continuous updates (e.g., animations)
+    mlx_loop(game->mlx_ptr);                               // Main loop to keep the game running
     free_resources(game);
     close(fd);
     return (0);
