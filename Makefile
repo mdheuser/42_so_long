@@ -6,7 +6,7 @@
 #    By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/03 10:08:59 by mdahlstr          #+#    #+#              #
-#    Updated: 2024/10/14 15:15:49 by mdahlstr         ###   ########.fr        #
+#    Updated: 2024/10/21 20:00:28 by mdahlstr         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,14 +17,14 @@ CFLAGS = -Wall -Wextra -Werror -I./mlx/include -Iincludes
 
 # Source files // I can use "addprefix" to mention "./src" only once.
 # SRCS = ./src/main.c ./src/command_line_args.c # ./src/open_map.c
-SRCS = ./src/main.c
+SRCS = ./src/main.c ./src/check_args.c ./src/read_map.c ./src/render_images.c ./src/free_resources.c
 
 # Object files (replace .c with .o)
 SO_LONG_OBJS = $(SRCS:.c=.o)
 
 # Libft directory and source files
 LIBFT_DIR = ./libs/libft
-LIBFT_SRCS = $(wildcard $(LIBFT_DIR)/*.c)  # Get all .c files in libft
+LIBFT_SRCS = $(wildcard $(LIBFT_DIR)/*.c)  # Get all .c files in libft // IS THIS FORBIDDEN?
 LIBFT_OBJS = $(LIBFT_SRCS:.c=.o)  # Corresponding .o files
 
 # MLX42 directory and object files

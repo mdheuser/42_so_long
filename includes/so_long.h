@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 14:50:02 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/21 13:40:20 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/21 19:33:33 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 # define EXIT_OPEN		'X'
 
 # define TILESIZE		64
-// # define MOVE_DELAY		10
+# define MOVE_DELAY		6
 
 typedef struct	s_position
 {
@@ -79,15 +79,25 @@ typedef struct s_game
 	int			score; // initialise it to 0 somewhere! ///////////////////////////////////////// TO DO
 	int			collectible_count; // initialise it to 0 somewhere! ///////////////////////////////////////// TO DO
 	int			move_count;
-	// int			move_cooldown;
+	int			move_cooldown;
 }	t_game;
 
+// Functions
+void    render_static_map(t_game *game);
+void    find_character_position(t_game *game);
+void    initialise_game(t_game *game);
+void    render_background(t_game *game, int y, int x);
+void    render_walls(t_game *game, int y, int x);
+void    render_collectibles(t_game *game, int y, int x);
+void    render_exit(t_game *game, int y, int x);
+void    render_player(t_game *game);
+void    free_resources(t_game *game);
+void    count_moves(t_game *game);
+void    clear_old_position(t_game *game, int old_y, int old_x);
+void	check_args(int argc, char *map_file_name);
+void    read_map(char *map_file_name, t_game *game);
+size_t	get_map_dimensions(int fd, size_t *width);
 //void    parse_command_line_args(int argc, char  **argv, t_game *game);
 //void    close_game(t_game *game);
-
-/*
-from: https://reactive.so/post/42-a-comprehensive-guide-to-so_long/ */
-
-// char **load_map(const char *file_path);
 
 #endif
