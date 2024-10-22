@@ -6,7 +6,7 @@
 #    By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/03 10:08:59 by mdahlstr          #+#    #+#              #
-#    Updated: 2024/10/21 20:00:28 by mdahlstr         ###   ########.fr        #
+#    Updated: 2024/10/22 16:24:45 by mdahlstr         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,10 @@ CFLAGS = -Wall -Wextra -Werror -I./mlx/include -Iincludes
 
 # Source files // I can use "addprefix" to mention "./src" only once.
 # SRCS = ./src/main.c ./src/command_line_args.c # ./src/open_map.c
-SRCS = ./src/main.c ./src/check_args.c ./src/read_map.c ./src/render_images.c ./src/free_resources.c
+SRCS = ./src/main.c ./src/check_args.c ./src/read_map.c ./src/read_map2.c \
+		./src/validate_map.c ./src/render_images.c ./src/render_static_map.c ./src/free_resources.c \
+		./src/load_images.c ./src/initialise_game.c ./src/manage_motion.c \
+		./src/manage_motion2.c ./src/counters.c ./src/win_game.c
 
 # Object files (replace .c with .o)
 SO_LONG_OBJS = $(SRCS:.c=.o)
