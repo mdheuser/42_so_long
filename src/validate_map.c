@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 15:23:40 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/22 18:32:40 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/25 15:49:12 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	check_valid_chars(char tile)
 {
 	return (tile == 'P' || tile == 'E' || tile == 'C'
-		|| tile == '1' || tile == '0');
+		|| tile == '1' || tile == '0' || tile == '\r');
 }
 
 int	check_walls(t_game *game, char tile, int x, int y)
@@ -27,61 +27,13 @@ int	check_walls(t_game *game, char tile, int x, int y)
 	else
 		return (1);
 }
-/*
-static void fill_visited(char ***visited, t_game *game)
-{
-	int i;
-	int j;
 
-	i = 0;
-	while (game->map->full[i])
-	{
-		j = 0;
-		(*visited)[i] = malloc(sizeof(char) * (game->map_width + 1)); // Allocate memory for each row
-		if (!(*visited)[i])
-		{
-    	// Handle memory allocation failure
-    		while (i > 0)
-			{
-        		free((*visited)[--i]);
-    		}
-    		free(*visited);
-    		ft_printf("Error\nMemory allocation failed for visited row.\n");
-    		return;
-		}
-		while (game->map->full[i][j])
-		{
-			(*visited)[i][j] = game->map->full[i][j]; // Initialize visited array with the map values
-			j++;
-		}
-		(*visited)[i][j] = '\0'; // Null-terminate each row
-		i++;
-	}
-}*/
-
-// This is the same as a FLOOD_FILL function.
-int	find_path(t_game *game, int x, int y, char **visited, char target)
-{
-	int	up;
-	int	down;
-	int	left;
-	int	right;
-
-	if (x < 0 || y < 0 || x >= game->map_width || y >= game->map_height
-	|| visited[y][x] == '1' || game->map->full[y][x] == '1')
-		return (0);
-	if (game->map->full[y][x] == target)
-		return (1);
-	visited[y][x] = '1';
-	up = find_path(game, x, y - 1, visited, target);
-	down = find_path(game, x, y + 1, visited, target);
-	left = find_path(game, x - 1, y, visited, target);
-	right = find_path(game, x + 1, y, visited, target);
-	if (up || down || left || right)
-		return (1);
-	return (0);
-}
-
+// Checks for valid characters (P E C 0 1),
+// walls (the map should be completely enclosed),
+// number of players (should be 1),
+// number of exits (should be 1).
+// collectibles (should be 1 or more),
+// valid path (collectibles and exit should be accessible).
 int	validate_map(t_game *game)
 {
 	int 	x;
@@ -89,67 +41,74 @@ int	validate_map(t_game *game)
 	int		player_count;
 	int		exit_count;
 	char	tile;
-	//char	**visited;
-	
+	// char	**visited;
+
 	x = 0;
 	y = 0;
 	player_count = 0;
 	exit_count = 0;
 	
-	while (game->map->full[y])
+	if (!game || !game->map || !game->map->full) 
 	{
+    	ft_printf("Error: Null pointer detected!\n");
+    	return (0);
+	}
+	ft_printf("Map validation started...\n");
+	if (!game->map->full)
+	{
+		ft_printf("Error\nMap is not initialized!\n");
+		return (0);
+	}
+	printf("Map height (right before loop to check map): %d\n", game->map_height);
+	while (y < game->map_height)
+	{
+		ft_printf("Checking row %d...\n", y); // Print current row
 		x = 0;
 		while (game->map->full[y][x])
 		{
 			tile = game->map->full[y][x];
+			ft_printf("Checking tile at position (%d, %d): '%c'\n", x, y, tile); // Print each tile
+
+			// Check for valid characters
 			if (!check_valid_chars(tile))
-			{	
-				ft_printf("Error\ninvalid chars\n");
+			{
+				ft_printf("Error\nInvalid character detected at (%d, %d): '%c'\n", x, y, tile);
 				return (0);
 			}
+
+			// Check if the walls are correct
 			if (!check_walls(game, tile, x, y))
 			{
-				//ft_printf("x = %d, y = %d\n", x, y);
-				ft_printf("Error\nMap not entirely enclosed by walls. %d\n", check_walls(game, tile, x, y));
+				ft_printf("Error\nMap not enclosed by walls at (%d, %d): '%c'\n", x, y, tile);
 				return (0);
 			}
+			// Count players, exits, and collectibles
 			if (tile == 'P')
+			{
 				player_count++;
+				ft_printf("Player found at (%d, %d)\n", x, y);
+			}
 			if (tile == 'E')
+			{
 				exit_count++;
+				ft_printf("Exit found at (%d, %d)\n", x, y);
+			}
 			if (tile == 'C')
+			{
 				game->collectible_count++;
+				ft_printf("Collectible found at (%d, %d)\n", x, y);
+			}
 			x++;
 		}
 		y++;
 	}
+	// Validate the number of players, exits, and collectibles
 	if (player_count != 1 || exit_count != 1 || game->collectible_count < 1)
-	{	
-		ft_printf("Error\nSomething missing from your map!\n (player, exit, or pacman) too many or too few ;-)\n");
-		return (0);
-	}
-	/*
-	visited = malloc(sizeof(char *) * (game->map_height + 1));
-	visited[game->map_height] = NULL; // Null-terminate the array of pointers
-	if (!visited)
 	{
-		ft_printf("Error\nMemory allocation failed for visited.\n");
+		ft_printf("Error\nMap validation failed: incorrect number of players, exits, or collectibles.\n");
 		return (0);
 	}
-	fill_visited(&visited, game);
-	if  (!find_path(game, game->map->player.x, game->map->player.y, visited,'C'))
-	{
-		free_double_p(&visited);
-		return (0);
-	}
-	fill_visited(&visited, game);
-	if  (!find_path(game, game->map->player.x, game->map->player.y, visited, 'E'))
-	{
-		free_double_p(&visited);
-		return (0);
-	}
-	free_double_p(&visited);
-	ft_printf("Map validated!\n");
-	*/
+	ft_printf("Map validated successfully!\n");
 	return (1);
 }
+

@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 14:08:58 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/22 14:13:48 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/25 17:05:34 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	cover_background(t_game *game)
 	}
 }
 
-void	render_static_map(t_game *game)
+int	render_static_map(t_game *game)
 {
 	int		x;
 	int		y;
@@ -46,14 +46,25 @@ void	render_static_map(t_game *game)
 		{
 			tile = game->map->full[y][x];
 			if (tile == WALL)
-				render_walls(game, y, x);
+			{
+				if (render_walls(game, y, x) == -1)
+					return (-1);
+			}
 			else if (tile == COLLECTIBLE)
-				render_collectibles(game, y, x);
+			{
+				if (render_collectibles(game, y, x) == -1)
+					return (-1);
+			}
 			else if (tile == EXIT || tile == EXIT_OPEN)
-				render_exit(game, y, x);
+			{
+				if (render_exit(game, y, x) == -1)
+					return (-1);
+			}
 			x++;
 		}
 		y++;
 	}
-	render_player(game);
+	//if (render_player(game) == -1)
+	//	return (-1);
+	return (1);
 }

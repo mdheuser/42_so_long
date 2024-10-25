@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:26:59 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/22 15:28:31 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/25 19:08:15 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,22 @@ void	update_player_position(t_game *game, int new_x, int new_y)
 		{
 			keep_score(game);
 			game->map->full[new_y][new_x] = BACKGROUND;
-			render_background(game, new_y, new_x);
+			if (render_background(game, new_y, new_x) == -1)
+			{
+				cleanup_game(game);
+				exit(1);
+			}
 		}
 		if (game->map->full[new_y][new_x] == EXIT_OPEN)
 			win_game(game);
 		else
 		{
 			set_new_position(game, new_y, new_x);
-			render_player(game);
+			if (render_player(game) == -1)
+			{
+				cleanup_game(game);
+				exit(1);
+			}
 			count_moves(game);
 		}
 	}
@@ -69,13 +77,17 @@ void	ft_hook(void *param)
 	}
 	if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_ESCAPE))
 		mlx_close_window(game->mlx_ptr);
-	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_UP))
+	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_UP)
+		|| mlx_is_key_down(game->mlx_ptr, MLX_KEY_W))
 		new_y -= 1;
-	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_DOWN))
+	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_DOWN)
+		|| mlx_is_key_down(game->mlx_ptr, MLX_KEY_S))
 		new_y += 1;
-	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_LEFT))
+	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_LEFT)
+		|| mlx_is_key_down(game->mlx_ptr, MLX_KEY_A))
 		new_x -= 1;
-	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_RIGHT))
+	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_RIGHT)
+		|| mlx_is_key_down(game->mlx_ptr, MLX_KEY_D))
 		new_x += 1;
 	if (can_move(game, new_x, new_y)
 		&& (new_x != game->map->player.x || new_y != game->map->player.y))

@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 14:50:02 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/22 18:13:30 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/25 19:22:43 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <string.h> // For strerror
 # include <unistd.h> // For read, write, close
 # include <fcntl.h> // For open
-# include <math.h> // For math library functions (link with -lm)
+// # include <math.h> // For math library functions (link with -lm)
 
 # define BACKGROUND		'0'
 # define WALL			'1'
@@ -82,65 +82,57 @@ typedef struct s_game
 	int			move_cooldown;
 }	t_game;
 
-// Functions
+// validate_args.c
+int	validate_args(int argc, char *map_file_name);
 
-int		open_map_file(char *map_file_name);
-void	init_map_structure(t_game *game, size_t height);
-void	init_mlx_window(t_game *game);
-void	read_map_lines(int fd, t_game *game);
-void	read_map(char *map_file_name, t_game *game);
-void	check_map(t_game *game);
-int		validate_map(t_game *game);
-int		check_walls(t_game *game, char tile, int x, int y);
-
-// check path -------
+// INITIALISATION /////////////////////////////////////////////////
+// initialise_game.c
+int	initialise_game(t_game *game, char *map_name);
+//t_game* init_game(void);
 
 
-void    render_static_map(t_game *game);
-void	cover_background(t_game *game);
-
-void    initialise_game(t_game *game);
-void    find_player_position(t_game *game);
-
-void    render_background(t_game *game, int y, int x);
-void    render_walls(t_game *game, int y, int x);
-void    render_collectibles(t_game *game, int y, int x);
-void    render_exit(t_game *game, int y, int x);
-void    render_player(t_game *game);
-
-void    free_resources(t_game *game);
-void    clear_old_position(t_game *game, int old_y, int old_x);
-void	check_args(int argc, char *map_file_name);
-
+// read_map.c & get_map_dimensions.c
+int	read_map(char *map_file_name, t_game *game);
 size_t	get_map_dimensions(int fd, size_t *width);
-size_t  find_width(char *line);
-size_t  find_height(int fd, char *line, size_t height, size_t *width);
+
+// validate_map.c
 int		validate_map(t_game *game);
-int		find_path(t_game *game, int x, int y, char **visited, char target);
-int		check_valid_chars(char tile);
-int		check_walls(t_game *game, char tile, int x, int y);
 
-// Freeing memory
-void	free_double_p(char ***array);
+// load_images.c
+int    load_images(t_game *game);
 
+// render_static_map.c and render_images.c
+int		render_static_map(t_game *game);
+int		render_background(t_game *game, int y, int x);
+int		render_collectibles(t_game *game, int y, int x);
+int		render_exit(t_game *game, int y, int x);
+int		render_player(t_game *game);
+int		render_walls(t_game *game, int y, int x);
 
-
-void    load_images(t_game *game);
-void    textures_to_image(t_game *game);
-void    load_textures(t_game *game);
-void    delete_textures(t_game *game);
-void	ft_hook(void *param);
+// manage_motion
 void    manage_motion(t_game *game);
-int		can_move(t_game *game, int new_x, int new_y);
-void    update_player_position(t_game *game, int new_x, int new_y);
+void    open_exit(t_game *game);
 void    clear_old_position(t_game *game, int old_y, int old_x);
 void    set_new_position(t_game *game, int new_y, int new_x);
-void    count_moves(t_game *game);
-//void    count_collectibles(t_game *game); // coollectibles are now counted at validate_map
-void    keep_score(t_game *game);
-void    win_game(t_game *game);
-void    open_exit(t_game *game);
 
-//void    close_game(t_game *game);
+// UTILS ////////////////////////////////////////////////////
+// counters.c
+void    keep_score(t_game *game);
+void    count_moves(t_game *game);
+
+// Memory allocation
+//void    malloc_all(t_game *game); /////////////////////////////////////////////??????????
+
+// Freeing memory
+//void	free_all(t_game *game);
+void	cleanup_game(t_game *game);
+void	free_images(t_game *game);
+void	free_textures(t_game *game);
+
+
+//void	free_double_p(char ***array);
+
+//win_game.c
+void    win_game(t_game *game);
 
 #endif

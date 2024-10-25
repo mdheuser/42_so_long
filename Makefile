@@ -6,7 +6,7 @@
 #    By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/03 10:08:59 by mdahlstr          #+#    #+#              #
-#    Updated: 2024/10/22 16:24:45 by mdahlstr         ###   ########.fr        #
+#    Updated: 2024/10/25 16:53:55 by mdahlstr         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,10 +17,10 @@ CFLAGS = -Wall -Wextra -Werror -I./mlx/include -Iincludes
 
 # Source files // I can use "addprefix" to mention "./src" only once.
 # SRCS = ./src/main.c ./src/command_line_args.c # ./src/open_map.c
-SRCS = ./src/main.c ./src/check_args.c ./src/read_map.c ./src/read_map2.c \
-		./src/validate_map.c ./src/render_images.c ./src/render_static_map.c ./src/free_resources.c \
+SRCS = ./src/main.c ./src/validate_args.c ./src/read_map.c ./src/get_map_dimensions.c \
+		./src/validate_map.c ./src/render_images.c ./src/render_static_map.c \
 		./src/load_images.c ./src/initialise_game.c ./src/manage_motion.c \
-		./src/manage_motion2.c ./src/counters.c ./src/win_game.c
+		./src/manage_motion2.c ./src/counters.c ./src/win_game.c ./src/cleanup_game.c
 
 # Object files (replace .c with .o)
 SO_LONG_OBJS = $(SRCS:.c=.o)
@@ -59,7 +59,7 @@ $(MLX42_LIB):
 
 # Rule to create the executable
 $(NAME): $(SO_LONG_OBJS) $(LIBFT_DIR)/libft.a
-	$(CC) $(CFLAGS) -o $(NAME) $(SO_LONG_OBJS) \
+	$(CC) -g $(CFLAGS) -o $(NAME) $(SO_LONG_OBJS) \
 	-L$(LIBFT_DIR) -lft -L$(MLX42_BUILD_DIR) -lmlx42 $(MLXLIB_FLAGS)
 
 # Clean up object files

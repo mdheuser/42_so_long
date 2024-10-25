@@ -6,13 +6,13 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 19:22:42 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/22 19:05:20 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/25 19:35:07 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-int	open_map_file(char *map_file_name)
+static int	open_map_file(char *map_file_name)
 {
 	int	fd;
 
@@ -25,73 +25,92 @@ int	open_map_file(char *map_file_name)
 	return (fd);
 }
 
-void	init_map_structure(t_game *game, size_t height)
+// Initialise game->map & game->map->full
+static void	init_map_structure(t_game *game, size_t height)
 {
+	size_t	i;
+
+	//game->map = NULL;  // Initialize to NULL
+    //game->map->full = NULL;  // Initialize to NULL (will be reassigned later)
 	game->map = ft_calloc(1, sizeof(t_map));
 	if (!game->map)
 	{
 		ft_printf("Error\nMemory allocation failed for game->map\n");
+		//cleanup_game(game);
 		exit(1);
 	}
 	game->map->full = ft_calloc(height, sizeof(char *));
 	if (!game->map->full)
 	{
 		ft_printf("Error\nMemory allocation failed for game->map->full\n");
+		//cleanup_game(game);
 		exit(1);
+	}
+	i = 0;
+	while (i < height)
+    {
+        game->map->full[i] = NULL;
+		i++;
 	}
 }
 
-void	init_mlx_window(t_game *game) // should thiss be somewhere else????
+static void	init_mlx_window(t_game *game) // should thiss be somewhere else????
 {
 	game->mlx_ptr = mlx_init((game->map_width) * TILESIZE, game->map_height
 			* TILESIZE, "~~~~~~ Pac-Ghost ~~~~~~", false);
 	if (!game->mlx_ptr)
 	{
-		free(game);
+		cleanup_game(game);
 		exit(1);
 	}
 }
 
-void	read_map_lines(int fd, t_game *game)
+static void	read_map_lines(int fd, t_game *game) // This is causing problems!!!
 {
 	char	*map_line;
 	int		i;
+	int		j;
 
 	i = 0;
 	while (i < game->map_height)
 	{
-		game->map->full[i] = ft_calloc(game->map_width + 1, sizeof(char));
 		map_line = get_next_line(fd);
-		if (map_line)
+		if (!map_line)
 		{
-			ft_strlcpy(game->map->full[i], map_line, game->map_width + 1);
-			free(map_line);
+			ft_printf("Error\nFailed to read map line\n");
+			break ;
 		}
-		else
+		game->map->full[i] = ft_calloc(game->map_width + 1, sizeof(char));
+		if (!game->map->full[i])
 		{
-			ft_printf("Memory allocation failed for map_line");
+			ft_printf("Memory allocation failed for line %d\n", i);
+			free(map_line);
+			cleanup_game(game);
 			exit(1);
 		}
+		ft_strlcpy(game->map->full[i], map_line, game->map_width + 1);
+		free(map_line);
 		i++;
+	}
+	j = 0;
+	while (j < i)
+	{
+		free(game->map->full[j]);
+		j++;
 	}
 }
 
-// maybe change function to INT 
-void	read_map(char *map_file_name, t_game *game)
+// maybe change function to INT
+// the open_map_file() function handles wrong fd
+int	read_map(char *map_file_name, t_game *game)
 {
 	int		fd;
 	size_t	height;
 	size_t	width;
 
 	fd = open_map_file(map_file_name);
-	//if (fd == -1)
-    //{
-    //    perror("Error opening the map file"); // YRS, I am allowwed to use this function. I can also use STRERROR
-    //    return ; // Return 0 for failure
-    //}
-	   // Check if the file is empty
 	height = get_map_dimensions(fd, &width);
-	//ft_printf("height: %d, width: %d", height, width); /// debugging
+	ft_printf("height: %d, width: %d\n", height, width); /// debugging /////////////
 	init_map_structure(game, height);
 	game->map_width = width;
 	game->map_height = height;
@@ -102,6 +121,7 @@ void	read_map(char *map_file_name, t_game *game)
 	read_map_lines(fd, game);
 	if (fd >= 0)
 		close(fd);
+	return (1);
 }
 
 /*

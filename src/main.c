@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 14:58:48 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/22 18:28:58 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/25 18:44:54 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,19 +28,25 @@ int	main(int argc, char **argv)
 {
 	t_game	*game;
 
-	check_args(argc, argv[1]);
+	ft_printf("running main...\n");
+	if (!validate_args(argc, argv[1]))
+		return (1);
+	ft_printf("checked arguments\n");
 	game = ft_calloc(1, sizeof(t_game));
-	read_map(argv[1], game);
-	if (!validate_map(game))
+	if (!game)
 	{
-		ft_printf("Error\nInvalid map.\n");
-		free_resources(game);
-		exit(1);
+		ft_printf("Error\nFailed to allocate memory for game struct.\n");
+		return (1);
 	}
-	load_images(game);
-	initialise_game(game);
-	render_static_map(game);
+	ft_printf("allocated memory for game\n");
+	if (!initialise_game(game, argv[1]))
+	{
+		ft_printf("Error\nFailed to initialise game.");
+		cleanup_game(game);
+		return (1);
+	}
 	manage_motion(game);
-	free_resources(game);
+	cleanup_game(game);
+	//glfwTerminate();
 	return (0);
 }

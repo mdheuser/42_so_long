@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   read_map2.c                                        :+:      :+:    :+:   */
+/*   get_map_dimensions.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 13:47:29 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/25 16:20:10 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/23 19:14:24 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ static size_t	find_height(int fd, char *line, size_t height, size_t *width)
 	size_t	line_len;
 
 	line = get_next_line(fd);
+	if (!line)
+		exit(1);
 	while (line != NULL)
 	{
 		line_len = find_width(line);
@@ -51,18 +53,11 @@ size_t	get_map_dimensions(int fd, size_t *width)
 {
 	char	*line;
 	size_t	height;
-	//size_t	line_len;
 
-	//line_len = 0;
 	line = get_next_line(fd);
 	if (!line)
 		return (0);
 	*width = find_width(line);
-	if (*width == 0)
-	{
-		free(line);
-		return (0);
-	}
 	height = 1;
 	free(line);
 	height = find_height(fd, line, height, width);
