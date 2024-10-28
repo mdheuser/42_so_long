@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 14:50:02 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/25 19:22:43 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/28 18:17:31 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,9 @@ int		validate_map(t_game *game);
 
 // load_images.c
 int    load_images(t_game *game);
+
+
+int	init_mlx_window(t_game *game);
 
 // render_static_map.c and render_images.c
 int		render_static_map(t_game *game);

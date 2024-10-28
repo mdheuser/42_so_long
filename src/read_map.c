@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 19:22:42 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/28 17:40:35 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/28 17:46:56 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ static void	init_map_structure(t_game *game, size_t height)
 	}
 }
 
-static void	init_mlx_window(t_game *game) // should thiss be somewhere else????
+// MOVED THIS FUNCTION TO initialise_game.c
+/*static void	init_mlx_window(t_game *game) // should thiss be somewhere else????
 {
 	game->mlx_ptr = mlx_init((game->map_width) * TILESIZE, game->map_height
 			* TILESIZE, "~~~~~~ Pac-Ghost ~~~~~~", false);
@@ -64,17 +65,7 @@ static void	init_mlx_window(t_game *game) // should thiss be somewhere else????
 		exit(1);
 	}
 }
-
-static void	init_mlx_window(t_game *game) // should thiss be somewhere else????
-{
-	game->mlx_ptr = mlx_init((game->map_width) * TILESIZE, game->map_height
-			* TILESIZE, "~~~~~~ Pac-Ghost ~~~~~~", false);
-	if (!game->mlx_ptr)
-	{
-		cleanup_game(game);
-		exit(1);
-	}
-}
+*/
 
 static void	read_map_lines(int fd, t_game *game) // This is causing problems!!!
 {
@@ -133,7 +124,7 @@ int	read_map(char *map_file_name, t_game *game)
 	game->map_height = height;
 	if (fd >= 0)
 		close(fd);
-	init_mlx_window(game);
+	// init_mlx_window(game); moved this call to initialise_game.c 
 	fd = open_map_file(map_file_name);
 	read_map_lines(fd, game);
 	//if (fd >= 0)

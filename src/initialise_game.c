@@ -6,11 +6,24 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:22:01 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/25 17:09:30 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/28 18:37:03 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+
+int	init_mlx_window(t_game *game)
+{
+	ft_printf("in init_mlx_window: width: %d, height: %d, tile size: %d\n", game->map_width, game->map_height, TILESIZE);
+	game->mlx_ptr = mlx_init((game->map_width) * TILESIZE, game->map_height
+			* TILESIZE, "~~~~~~ Pac-Ghost ~~~~~~", false);
+	if (!game->mlx_ptr)
+	{
+		cleanup_game(game);
+		return (0);
+	}
+	return (1);
+}
 
 // ATTENTION! This function also turns the initial player position into a background tile!
 int	find_player_position(t_game *game)
@@ -29,7 +42,7 @@ int	find_player_position(t_game *game)
 				game->map->player.x = j;
 				game->map->player.y = i;
 				game->map->full[i][j] = BACKGROUND;
-				//ft_printf("Initial character position: x = %d, y = %d\n", game->map->player.x, game->map->player.y);
+				ft_printf("Initial character position: x = %d, y = %d\n", game->map->player.x, game->map->player.y);
 				return (1);
 			}
 			j++;
@@ -46,6 +59,12 @@ int	initialise_game(t_game *game, char *map_name)
 	game->map = NULL;
 	game->textures = NULL;
 	game->images = NULL;
+	game->map_width = 0;
+	game->map_height = 0;
+	game->score = 0;
+	game->collectible_count = 0;
+	game->move_count = 0;
+	game->move_cooldown = 0;
 	if (!read_map(map_name, game))
 	{	
 		ft_printf("Error\nFailed to read map file.\n");
@@ -54,6 +73,8 @@ int	initialise_game(t_game *game, char *map_name)
 	if (!validate_map(game))
 		return (0);
 	if (!find_player_position(game))
+		return (0);
+	if (!init_mlx_window(game))
 		return (0);
 	if (!load_images(game))
 		return (0);
