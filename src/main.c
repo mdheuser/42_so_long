@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 14:58:48 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/28 18:15:13 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/28 19:06:42 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,5 @@ int	main(int argc, char **argv)
 	}
 	manage_motion(game);
 	cleanup_game(game);
-	return (0);
+	return (EXIT_SUCCESS);
 }

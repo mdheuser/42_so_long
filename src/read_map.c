@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 19:22:42 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/28 17:46:56 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/28 20:00:09 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ static void	read_map_lines(int fd, t_game *game) // This is causing problems!!!
 		{
 			ft_printf("Memory allocation failed for line %d\n", i);
 			free(map_line);
+			map_line = NULL;
 			cleanup_game(game);
 			exit(1);
 		}

@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 14:08:58 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/25 17:05:34 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/28 19:44:10 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,5 @@ int	render_static_map(t_game *game)
 		}
 		y++;
 	}
-	//if (render_player(game) == -1)
-	//	return (-1);
 	return (1);
 }

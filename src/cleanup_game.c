@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 20:00:48 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/25 19:26:10 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/28 19:15:48 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	cleanup_game(t_game *game)
             while (i < game->map_height) // Use map_height if known
             {
                 free(game->map->full[i]);
-				game->map->full[i] = NULL; // MAYBE NOT ??????????????????????????????
+				//game->map->full[i] = NULL; // MAYBE NOT ??????????????????????????????
 				i++;
 			}
             free(game->map->full); // Free the array of pointers

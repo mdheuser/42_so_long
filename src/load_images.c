@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:13:44 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/28 18:03:49 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/28 19:53:00 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ static int	textures_to_image(t_game *game)
 	}
 	return (1);
 }
-
+/*
 static void	delete_textures(t_game *game)
 {
 	mlx_delete_texture(game->textures->background);
@@ -112,6 +112,7 @@ static void	delete_textures(t_game *game)
 	mlx_delete_texture(game->textures->exit);
 	mlx_delete_texture(game->textures->exit_open);
 }
+*/
 
 int	load_images(t_game *game)
 {
@@ -120,7 +121,7 @@ int	load_images(t_game *game)
 		ft_printf("Error\nFailed to load textures or images.\n");
 		return (0);
 	}
-	delete_textures(game);
+	free_textures(game);
 	ft_printf("Images and Textures loaded.\n");
 	return (1);
 }

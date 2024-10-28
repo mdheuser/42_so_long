@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:22:01 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/28 18:37:03 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/28 19:14:55 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	init_mlx_window(t_game *game)
 	if (!game->mlx_ptr)
 	{
 		cleanup_game(game);
+		game->mlx_ptr = NULL;
 		return (0);
 	}
 	return (1);

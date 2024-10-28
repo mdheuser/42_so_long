@@ -6,7 +6,7 @@
 #    By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/03 10:08:59 by mdahlstr          #+#    #+#              #
-#    Updated: 2024/10/25 16:53:55 by mdahlstr         ###   ########.fr        #
+#    Updated: 2024/10/28 19:32:27 by mdahlstr         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,7 +54,7 @@ $(MLX42_LIB):
 	if [ ! -d "$(MLX42_DIR)" ]; \
 	then git clone https://github.com/codam-coding-college/MLX42.git $(MLX42_DIR); fi
 	mkdir -p $(MLX42_BUILD_DIR)
-	cmake -B $(MLX42_BUILD_DIR) -S $(MLX42_DIR)
+	cmake -B $(MLX42_BUILD_DIR) -S $(MLX42_DIR) -DDEBUG=1
 	cmake --build $(MLX42_BUILD_DIR)
 
 # Rule to create the executable

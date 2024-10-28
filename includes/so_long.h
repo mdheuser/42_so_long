@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 14:50:02 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/28 18:17:31 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/28 19:38:59 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,8 @@ typedef struct	s_map
 
 typedef struct s_game
 {
-	void		*mlx_ptr; // MLX pointer
-	void		*win_ptr; // MLX window pointer
+	mlx_t		*mlx_ptr; // MLX pointer
+	mlx_t		*win_ptr; // MLX window pointer
 	t_textures	*textures; // MLX image pointers (on the stack)
 	t_images	*images;
 	t_map		*map; // Map pointer (contains map details - preferably kept on the stack)
