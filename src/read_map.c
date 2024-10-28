@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 19:22:42 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/25 19:35:07 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/28 17:40:35 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,21 +65,35 @@ static void	init_mlx_window(t_game *game) // should thiss be somewhere else????
 	}
 }
 
+static void	init_mlx_window(t_game *game) // should thiss be somewhere else????
+{
+	game->mlx_ptr = mlx_init((game->map_width) * TILESIZE, game->map_height
+			* TILESIZE, "~~~~~~ Pac-Ghost ~~~~~~", false);
+	if (!game->mlx_ptr)
+	{
+		cleanup_game(game);
+		exit(1);
+	}
+}
+
 static void	read_map_lines(int fd, t_game *game) // This is causing problems!!!
 {
 	char	*map_line;
 	int		i;
-	int		j;
 
+	// Check if the first line is empty
+	map_line = get_next_line(fd);
+	if (!map_line)
+	{
+		ft_printf("Error\nEmpty map file\n");
+		close(fd);
+		cleanup_game(game);
+		exit(1);
+	}
 	i = 0;
+	// Process the first line and continue reading remaining lines
 	while (i < game->map_height)
 	{
-		map_line = get_next_line(fd);
-		if (!map_line)
-		{
-			ft_printf("Error\nFailed to read map line\n");
-			break ;
-		}
 		game->map->full[i] = ft_calloc(game->map_width + 1, sizeof(char));
 		if (!game->map->full[i])
 		{
@@ -90,17 +104,19 @@ static void	read_map_lines(int fd, t_game *game) // This is causing problems!!!
 		}
 		ft_strlcpy(game->map->full[i], map_line, game->map_width + 1);
 		free(map_line);
+		map_line = get_next_line(fd);
+		// Handle case where file ends prematurely
+		if (!map_line && i < game->map_height - 1)
+		{
+			ft_printf("Error: Unexpected end of file\n");
+			cleanup_game(game);
+			exit(1);
+		}
 		i++;
 	}
-	j = 0;
-	while (j < i)
-	{
-		free(game->map->full[j]);
-		j++;
-	}
+	close (fd);
 }
 
-// maybe change function to INT
 // the open_map_file() function handles wrong fd
 int	read_map(char *map_file_name, t_game *game)
 {
@@ -108,6 +124,7 @@ int	read_map(char *map_file_name, t_game *game)
 	size_t	height;
 	size_t	width;
 
+	width = 0;
 	fd = open_map_file(map_file_name);
 	height = get_map_dimensions(fd, &width);
 	ft_printf("height: %d, width: %d\n", height, width); /// debugging /////////////
@@ -119,8 +136,8 @@ int	read_map(char *map_file_name, t_game *game)
 	init_mlx_window(game);
 	fd = open_map_file(map_file_name);
 	read_map_lines(fd, game);
-	if (fd >= 0)
-		close(fd);
+	//if (fd >= 0)
+	//	close(fd);
 	return (1);
 }
 
