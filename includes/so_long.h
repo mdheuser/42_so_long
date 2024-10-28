@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 14:50:02 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/28 19:38:59 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/28 20:34:33 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # include <string.h> // For strerror
 # include <unistd.h> // For read, write, close
 # include <fcntl.h> // For open
-// # include <math.h> // For math library functions (link with -lm)
 
 # define BACKGROUND		'0'
 # define WALL			'1'
@@ -98,6 +97,9 @@ size_t	get_map_dimensions(int fd, size_t *width);
 // validate_map.c
 int		validate_map(t_game *game);
 
+// validate_path.c
+int		validate_path(t_game *game);
+
 // load_images.c
 int    load_images(t_game *game);
 
@@ -122,9 +124,6 @@ void    set_new_position(t_game *game, int new_y, int new_x);
 // counters.c
 void    keep_score(t_game *game);
 void    count_moves(t_game *game);
-
-// Memory allocation
-//void    malloc_all(t_game *game); /////////////////////////////////////////////??????????
 
 // Freeing memory
 //void	free_all(t_game *game);

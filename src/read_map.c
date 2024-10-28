@@ -6,12 +6,14 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 19:22:42 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/28 20:00:09 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/28 20:22:16 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
+// Open map file
+// Close it if fd is invalid.
 static int	open_map_file(char *map_file_name)
 {
 	int	fd;
@@ -30,20 +32,18 @@ static void	init_map_structure(t_game *game, size_t height)
 {
 	size_t	i;
 
-	//game->map = NULL;  // Initialize to NULL
-    //game->map->full = NULL;  // Initialize to NULL (will be reassigned later)
 	game->map = ft_calloc(1, sizeof(t_map));
 	if (!game->map)
 	{
 		ft_printf("Error\nMemory allocation failed for game->map\n");
-		//cleanup_game(game);
+		cleanup_game(game);
 		exit(1);
 	}
 	game->map->full = ft_calloc(height, sizeof(char *));
 	if (!game->map->full)
 	{
 		ft_printf("Error\nMemory allocation failed for game->map->full\n");
-		//cleanup_game(game);
+		cleanup_game(game);
 		exit(1);
 	}
 	i = 0;
@@ -54,25 +54,16 @@ static void	init_map_structure(t_game *game, size_t height)
 	}
 }
 
-// MOVED THIS FUNCTION TO initialise_game.c
-/*static void	init_mlx_window(t_game *game) // should thiss be somewhere else????
-{
-	game->mlx_ptr = mlx_init((game->map_width) * TILESIZE, game->map_height
-			* TILESIZE, "~~~~~~ Pac-Ghost ~~~~~~", false);
-	if (!game->mlx_ptr)
-	{
-		cleanup_game(game);
-		exit(1);
-	}
-}
-*/
-
-static void	read_map_lines(int fd, t_game *game) // This is causing problems!!!
+// Read map line one by one using get_next_line()
+// Check if the first line is empty.
+// Inside the loop: Process the first line and continue reading remaining lines
+// Handle case where file ends prematurely
+static void	read_map_lines(int fd, t_game *game)
 {
 	char	*map_line;
 	int		i;
 
-	// Check if the first line is empty
+	
 	map_line = get_next_line(fd);
 	if (!map_line)
 	{
@@ -82,7 +73,6 @@ static void	read_map_lines(int fd, t_game *game) // This is causing problems!!!
 		exit(1);
 	}
 	i = 0;
-	// Process the first line and continue reading remaining lines
 	while (i < game->map_height)
 	{
 		game->map->full[i] = ft_calloc(game->map_width + 1, sizeof(char));
@@ -97,7 +87,6 @@ static void	read_map_lines(int fd, t_game *game) // This is causing problems!!!
 		ft_strlcpy(game->map->full[i], map_line, game->map_width + 1);
 		free(map_line);
 		map_line = get_next_line(fd);
-		// Handle case where file ends prematurely
 		if (!map_line && i < game->map_height - 1)
 		{
 			ft_printf("Error: Unexpected end of file\n");
@@ -132,46 +121,3 @@ int	read_map(char *map_file_name, t_game *game)
 	//	close(fd);
 	return (1);
 }
-
-/*
-void	read_map(char *map_file_name, t_game *game)
-{
-	int		fd;
-	char	buffer[1024];
-	size_t	height;
-	size_t	width;
-	ssize_t	bytes_read;
-
-	fd = open_map_file(map_file_name);
-	if (fd == -1)
-    {
-        perror("Error opening the map file"); // YRS, I am allowwed to use this function. I can also use STRERROR
-        return ; // Return 0 for failure
-    }
-	   // Check if the file is empty
-    bytes_read = read(fd, buffer, sizeof(buffer));
-    if (bytes_read <= 0)
-    {
-        close(fd); // Close the file descriptor
-        ft_printf("Error: The map file is empty or could not be read.\n");
-        return ; // Return 0 for failure // MAYBE CHANGE FUNCTION TO INT 
-    }
-	height = get_map_dimensions(fd, &width);
-	ft_printf("height: %d, width: %d", height, width); /// debugging
-	if (height < 3 && width < 3)
-	{
-		ft_printf("Empty file or map too small"); // something like this?
-		return ;
-	}
-	init_map_structure(game, height);
-	game->map_width = width;
-	game->map_height = height;
-	if (fd >= 0)
-		close(fd);
-	init_mlx_window(game);
-	fd = open_map_file(map_file_name);
-	read_map_lines(fd, game);
-	if (fd >= 0)
-		close(fd);
-}
-*/
