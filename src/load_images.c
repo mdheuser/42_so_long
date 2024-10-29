@@ -6,58 +6,57 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:13:44 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/28 19:53:00 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/29 16:32:48 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-
-void free_textures(t_game *game)
+void	free_textures(t_game *game)
 {
-	if (!game || !game->textures) // Check if game or textures is NULL
-        return ;
-    if (game->textures->background)
-        mlx_delete_texture(game->textures->background);
-    if (game->textures->wall)
-        mlx_delete_texture(game->textures->wall);
-    if (game->textures->collectible)
-        mlx_delete_texture(game->textures->collectible);
-    if (game->textures->player)
-        mlx_delete_texture(game->textures->player);
-    if (game->textures->exit)
-        mlx_delete_texture(game->textures->exit);
-    if (game->textures->exit_open)
-        mlx_delete_texture(game->textures->exit_open);
-    free(game->textures);  // Free the textures struct itself
-    game->textures = NULL;
+	if (!game || !game->textures)
+		return ;
+	if (game->textures->background)
+		mlx_delete_texture(game->textures->background);
+	if (game->textures->wall)
+		mlx_delete_texture(game->textures->wall);
+	if (game->textures->collectible)
+		mlx_delete_texture(game->textures->collectible);
+	if (game->textures->player)
+		mlx_delete_texture(game->textures->player);
+	if (game->textures->exit)
+		mlx_delete_texture(game->textures->exit);
+	if (game->textures->exit_open)
+		mlx_delete_texture(game->textures->exit_open);
+	free(game->textures);
+	game->textures = NULL;
 }
 
-void free_images(t_game *game)
+void	free_images(t_game *game)
 {
-	if (!game || !game->images) // Check if game or images is NULL
-        return ;
-    if (game->images->background)
-        mlx_delete_image(game->mlx_ptr, game->images->background);
-    if (game->images->wall)
-        mlx_delete_image(game->mlx_ptr, game->images->wall);
-    if (game->images->collectible)
-        mlx_delete_image(game->mlx_ptr, game->images->collectible);
-    if (game->images->player)
-        mlx_delete_image(game->mlx_ptr, game->images->player);
-    if (game->images->exit)
-        mlx_delete_image(game->mlx_ptr, game->images->exit);
-    if (game->images->exit_open)
-        mlx_delete_image(game->mlx_ptr, game->images->exit_open);
-    free(game->images);  // Finally, free the images struct
-    game->images = NULL;
+	if (!game || !game->images)
+		return ;
+	if (game->images->background)
+		mlx_delete_image(game->mlx_ptr, game->images->background);
+	if (game->images->wall)
+		mlx_delete_image(game->mlx_ptr, game->images->wall);
+	if (game->images->collectible)
+		mlx_delete_image(game->mlx_ptr, game->images->collectible);
+	if (game->images->player)
+		mlx_delete_image(game->mlx_ptr, game->images->player);
+	if (game->images->exit)
+		mlx_delete_image(game->mlx_ptr, game->images->exit);
+	if (game->images->exit_open)
+		mlx_delete_image(game->mlx_ptr, game->images->exit_open);
+	free(game->images);
+	game->images = NULL;
 }
 
 static int	load_textures(t_game *game)
 {
 	game->textures = ft_calloc(1, sizeof(t_textures));
 	if (!game->textures)
-        return (0);  // Allocation failure
+		return (0);
 	game->textures->background = mlx_load_png("imgs/bw_background.png");
 	game->textures->wall = mlx_load_png("imgs/bw_walls2.png");
 	game->textures->collectible = mlx_load_png("imgs/bw_pacman2.png");
@@ -79,7 +78,7 @@ static int	textures_to_image(t_game *game)
 {
 	game->images = ft_calloc(1, sizeof(t_images));
 	if (!game->images)
-        return (0);  // Allocation failure
+		return (0);
 	game->images->background = mlx_texture_to_image(game->mlx_ptr,
 			game->textures->background);
 	game->images->wall = mlx_texture_to_image(game->mlx_ptr,
@@ -102,17 +101,6 @@ static int	textures_to_image(t_game *game)
 	}
 	return (1);
 }
-/*
-static void	delete_textures(t_game *game)
-{
-	mlx_delete_texture(game->textures->background);
-	mlx_delete_texture(game->textures->wall);
-	mlx_delete_texture(game->textures->collectible);
-	mlx_delete_texture(game->textures->player);
-	mlx_delete_texture(game->textures->exit);
-	mlx_delete_texture(game->textures->exit_open);
-}
-*/
 
 int	load_images(t_game *game)
 {
@@ -122,6 +110,5 @@ int	load_images(t_game *game)
 		return (0);
 	}
 	free_textures(game);
-	ft_printf("Images and Textures loaded.\n");
 	return (1);
 }

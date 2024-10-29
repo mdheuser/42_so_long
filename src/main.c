@@ -6,13 +6,13 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 14:58:48 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/28 19:06:42 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/29 17:28:35 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-/////////////////// TEMPORARY DEBUGGING
+/////////////////// FOR DEBUGGING
 /*
 void print_map(t_game *game)
 {
@@ -28,24 +28,13 @@ int	main(int argc, char **argv)
 {
 	t_game	*game;
 
-	ft_printf("running main...\n");
-	if (!validate_args(argc, argv[1]))
-		return (1);
-	ft_printf("checked arguments\n");
+	validate_args(argc, argv[1]);
 	game = ft_calloc(1, sizeof(t_game));
 	if (!game)
-	{
-		ft_printf("Error\nFailed to allocate memory for game struct.\n");
-		return (1);
-	}
-	ft_printf("allocated memory for game\n");
+		handle_error("Failed to allocate memory for game struct.", game);
 	if (!initialise_game(game, argv[1]))
-	{
-		ft_printf("Error\nFailed to initialise game.");
-		cleanup_game(game);
-		return (1);
-	}
+		handle_error("Failed to initialise game.", game);
 	manage_motion(game);
 	cleanup_game(game);
-	return (EXIT_SUCCESS);
+	exit(EXIT_SUCCESS);
 }

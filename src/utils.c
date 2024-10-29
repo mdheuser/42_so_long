@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   counters.c                                         :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:38:31 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/25 19:03:11 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/29 17:18:19 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,13 @@ void	keep_score(t_game *game)
 void	count_moves(t_game *game)
 {
 	ft_printf("Moves: %d\n", game->move_count++);
+}
+
+// Prints error message and call cleanup_game().
+void	handle_error(const char *message, t_game *game)
+{
+	ft_printf("Error\n%s\n", message);
+	if (game)
+		cleanup_game(game);
+	exit(EXIT_FAILURE);
 }

@@ -6,33 +6,40 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 20:00:48 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/28 19:15:48 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/29 16:10:29 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
-/*
-void	free_double_p(char ***array)
+
+static void	free_map(t_game *game)
 {
 	int	i;
 
-	if (!array || !(*array))
-		return ;
 	i = 0;
-	while ((*array)[i])
+	if (game->map)
 	{
-		free((*array)[i]);  // Free each row
-		i++;
+		if (game->map->full)
+		{	
+			while (i < game->map_height)
+			{
+				if (game->map->full[i])
+				{
+					free(game->map->full[i]);
+					game->map->full[i] = NULL;
+				}
+				i++;
+			}
+			free(game->map->full);
+			game->map->full = NULL;
+		}
+		free(game->map);
+		game->map = NULL;
 	}
-	free(*array);  // Free the array of pointers
-	*array = NULL;  // Set the pointer to NULL for safety
 }
-*/
 
 void	cleanup_game(t_game *game)
 {
-	int	i;
-
 	if (!game)
 		return ;
 	if (game->textures)
@@ -50,23 +57,6 @@ void	cleanup_game(t_game *game)
 		mlx_terminate(game->mlx_ptr);
 		game->mlx_ptr = NULL;
 	}
-	i = 0;
-	if (game->map)
-    {
-        if (game->map->full) // Check if full is not NULL
-        {
-            while (i < game->map_height) // Use map_height if known
-            {
-                free(game->map->full[i]);
-				//game->map->full[i] = NULL; // MAYBE NOT ??????????????????????????????
-				i++;
-			}
-            free(game->map->full); // Free the array of pointers
-			game->map->full = NULL;
-        }
-        free(game->map); // Free the map structure
-		game->map = NULL;
-	}
+	free_map(game);
 	free(game);
-	game = NULL;
 }

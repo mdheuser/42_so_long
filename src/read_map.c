@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 19:22:42 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/28 20:22:16 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/29 16:39:43 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ static void	init_map_structure(t_game *game, size_t height)
 	}
 	i = 0;
 	while (i < height)
-    {
-        game->map->full[i] = NULL;
+	{
+		game->map->full[i] = NULL;
 		i++;
 	}
 }
@@ -63,14 +63,11 @@ static void	read_map_lines(int fd, t_game *game)
 	char	*map_line;
 	int		i;
 
-	
 	map_line = get_next_line(fd);
 	if (!map_line)
 	{
-		ft_printf("Error\nEmpty map file\n");
 		close(fd);
-		cleanup_game(game);
-		exit(1);
+		handle_error("Empty map file.", game);
 	}
 	i = 0;
 	while (i < game->map_height)
@@ -78,27 +75,21 @@ static void	read_map_lines(int fd, t_game *game)
 		game->map->full[i] = ft_calloc(game->map_width + 1, sizeof(char));
 		if (!game->map->full[i])
 		{
-			ft_printf("Memory allocation failed for line %d\n", i);
 			free(map_line);
 			map_line = NULL;
-			cleanup_game(game);
-			exit(1);
+			handle_error("Memory allocation failed for line.", game);
 		}
 		ft_strlcpy(game->map->full[i], map_line, game->map_width + 1);
 		free(map_line);
 		map_line = get_next_line(fd);
 		if (!map_line && i < game->map_height - 1)
-		{
-			ft_printf("Error: Unexpected end of file\n");
-			cleanup_game(game);
-			exit(1);
-		}
+			handle_error("Unexpected end of file.", game);
 		i++;
 	}
 	close (fd);
 }
 
-// the open_map_file() function handles wrong fd
+// the open_map_file() function handles wrong fd cases.
 int	read_map(char *map_file_name, t_game *game)
 {
 	int		fd;
@@ -108,16 +99,12 @@ int	read_map(char *map_file_name, t_game *game)
 	width = 0;
 	fd = open_map_file(map_file_name);
 	height = get_map_dimensions(fd, &width);
-	ft_printf("height: %d, width: %d\n", height, width); /// debugging /////////////
 	init_map_structure(game, height);
 	game->map_width = width;
 	game->map_height = height;
 	if (fd >= 0)
 		close(fd);
-	// init_mlx_window(game); moved this call to initialise_game.c 
 	fd = open_map_file(map_file_name);
 	read_map_lines(fd, game);
-	//if (fd >= 0)
-	//	close(fd);
 	return (1);
 }

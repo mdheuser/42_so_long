@@ -6,12 +6,13 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:26:59 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/28 18:15:38 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/29 17:16:30 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
+// This function also handles the case of winning the game.
 void	update_player_position(t_game *game, int new_x, int new_y)
 {
 	int	old_x;
@@ -29,10 +30,7 @@ void	update_player_position(t_game *game, int new_x, int new_y)
 			keep_score(game);
 			game->map->full[new_y][new_x] = BACKGROUND;
 			if (render_background(game, new_y, new_x) == -1)
-			{
-				cleanup_game(game);
-				exit(1);
-			}
+				handle_error("Unable to render background.", game);
 		}
 		if (game->map->full[new_y][new_x] == EXIT_OPEN)
 			win_game(game);
@@ -40,15 +38,10 @@ void	update_player_position(t_game *game, int new_x, int new_y)
 		{
 			set_new_position(game, new_y, new_x);
 			if (render_player(game) == -1)
-			{
-				cleanup_game(game);
-				exit(1);
-			}
+				handle_error("Unable to render the player image.", game);
 			count_moves(game);
 		}
 	}
-	//ft_printf("Old Position: x = %d, y = %d\n", old_x, old_y);
-	//ft_printf("Updated Position: x = %d, y = %d\n", new_x, new_y);
 }
 
 int	can_move(t_game *game, int new_x, int new_y)
@@ -76,7 +69,11 @@ void	ft_hook(void *param)
 		return ;
 	}
 	if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_ESCAPE))
+	{
 		mlx_close_window(game->mlx_ptr);
+		cleanup_game(game);
+		exit(EXIT_SUCCESS);
+	}
 	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_UP)
 		|| mlx_is_key_down(game->mlx_ptr, MLX_KEY_W))
 		new_y -= 1;

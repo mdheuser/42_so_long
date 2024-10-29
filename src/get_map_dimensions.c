@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 13:47:29 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/23 19:14:24 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/29 16:31:12 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,5 @@ size_t	get_map_dimensions(int fd, size_t *width)
 	height = 1;
 	free(line);
 	height = find_height(fd, line, height, width);
-	//ft_printf("Map dimensions: height = %d, width = %d\n", height, *width);
 	return (height);
 }
