@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 19:22:42 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/29 16:39:43 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/29 18:14:55 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,34 +63,30 @@ static void	read_map_lines(int fd, t_game *game)
 	char	*map_line;
 	int		i;
 
-	map_line = get_next_line(fd);
-	if (!map_line)
-	{
-		close(fd);
-		handle_error("Empty map file.", game);
-	}
 	i = 0;
 	while (i < game->map_height)
 	{
+		map_line = get_next_line(fd);
+		if (!map_line)
+		{
+			if (i < game->map_height)
+				handle_error("Empty map file.", game);
+			else
+				handle_error("Unexpected end of file.", game);
+		}
 		game->map->full[i] = ft_calloc(game->map_width + 1, sizeof(char));
 		if (!game->map->full[i])
 		{
 			free(map_line);
-			map_line = NULL;
 			handle_error("Memory allocation failed for line.", game);
 		}
 		ft_strlcpy(game->map->full[i], map_line, game->map_width + 1);
 		free(map_line);
-		map_line = get_next_line(fd);
-		if (!map_line && i < game->map_height - 1)
-			handle_error("Unexpected end of file.", game);
 		i++;
 	}
-	close (fd);
 }
 
-// the open_map_file() function handles wrong fd cases.
-int	read_map(char *map_file_name, t_game *game)
+void	read_map(char *map_file_name, t_game *game)
 {
 	int		fd;
 	size_t	height;
@@ -106,5 +102,6 @@ int	read_map(char *map_file_name, t_game *game)
 		close(fd);
 	fd = open_map_file(map_file_name);
 	read_map_lines(fd, game);
-	return (1);
+	if (fd >= 0)
+		close(fd);
 }

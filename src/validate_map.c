@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 15:23:40 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/29 17:06:17 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/29 18:16:20 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,27 +20,26 @@ static int	check_valid_chars(char tile)
 
 static int	check_walls(t_game *game, char tile, int x, int y)
 {
-	//ft_printf("map width: %d, map height %d\n", game->map_width, game->map_height);
-	if ((y == 0 || x == 0 || y == game->map_height - 1 || x == game->map_width -1)
+	if ((y == 0 || x == 0 || y == game->map_height - 1
+			|| x == game->map_width -1)
 		&& tile != '1')
 		return (0);
 	else
 		return (1);
 }
 
-static int check_tile(t_game *game, char tile, int *player_count, int *exit_count)
+static int	check_tile(t_game *game, char tile)
 {
-    if (!check_valid_chars(tile))
+	if (!check_valid_chars(tile))
 		return (0);
-    if (tile == 'P')
-		(*player_count)++;
-    if (tile == 'E')
-		(*exit_count)++;
-    if (tile == 'C')
+	if (tile == 'P')
+		(game->player_count)++;
+	if (tile == 'E')
+		(game->exit_count)++;
+	if (tile == 'C')
 		game->collectible_count++;
-    return 1;
+	return (1);
 }
-
 
 // Checks for valid characters (P E C 0 1),
 // walls (the map should be completely enclosed),
@@ -48,17 +47,13 @@ static int check_tile(t_game *game, char tile, int *player_count, int *exit_coun
 // number of exits (should be 1).
 // collectibles (should be 1 or more),
 // valid path (collectibles and exit should be accessible).
-int	validate_map(t_game *game)
+void	validate_map(t_game *game)
 {
-	int 	x;
-	int 	y;
-	int		player_count;
-	int		exit_count;
+	int	x;
+	int	y;
 
 	x = 0;
-	player_count = 0;
-	exit_count = 0;
-	if (!game || !game->map || !game->map->full) 
+	if (!game || !game->map || !game->map->full)
 		handle_error("Null pointer detected.", game);
 	y = 0;
 	while (y < game->map_height)
@@ -66,7 +61,7 @@ int	validate_map(t_game *game)
 		x = 0;
 		while (game->map->full[y][x])
 		{
-			if (!check_tile(game, game->map->full[y][x], &player_count, &exit_count))
+			if (!check_tile(game, game->map->full[y][x]))
 				handle_error("Invalid character detected.", game);
 			if (!check_walls(game, game->map->full[y][x], x, y))
 				handle_error("The map is not totally enclosed.", game);
@@ -74,8 +69,7 @@ int	validate_map(t_game *game)
 		}
 		y++;
 	}
-	if (player_count != 1 || exit_count != 1 || game->collectible_count < 1)
+	if (game->player_count != 1 || game->exit_count != 1
+		|| game->collectible_count < 1)
 		handle_error("Map validation failed.", game);
-	return (1);
 }
-

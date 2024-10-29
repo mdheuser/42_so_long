@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:13:44 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/29 16:32:48 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/29 18:29:19 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,13 +102,9 @@ static int	textures_to_image(t_game *game)
 	return (1);
 }
 
-int	load_images(t_game *game)
+void	load_images(t_game *game)
 {
 	if (!load_textures(game) || !textures_to_image(game))
-	{
-		ft_printf("Error\nFailed to load textures or images.\n");
-		return (0);
-	}
+		handle_error("Failed to load textures or images.", game);
 	free_textures(game);
-	return (1);
 }

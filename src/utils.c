@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:38:31 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/29 17:18:19 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/29 18:55:57 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ void	count_moves(t_game *game)
 	ft_printf("Moves: %d\n", game->move_count++);
 }
 
-// Prints error message and call cleanup_game().
+// Prints error message, calls cleanup_game()
+// and exits the programme (failure);
 void	handle_error(const char *message, t_game *game)
 {
 	ft_printf("Error\n%s\n", message);
