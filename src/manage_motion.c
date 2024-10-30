@@ -6,45 +6,13 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:26:59 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/29 17:16:30 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/30 16:02:52 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-// This function also handles the case of winning the game.
-void	update_player_position(t_game *game, int new_x, int new_y)
-{
-	int	old_x;
-	int	old_y;
-
-	old_x = game->map->player.x;
-	old_y = game->map->player.y;
-	if (old_x != new_x || old_y != new_y)
-	{
-		clear_old_position(game, old_y, old_x);
-		game->map->player.x = new_x;
-		game->map->player.y = new_y;
-		if (game->map->full[new_y][new_x] == COLLECTIBLE)
-		{
-			keep_score(game);
-			game->map->full[new_y][new_x] = BACKGROUND;
-			if (render_background(game, new_y, new_x) == -1)
-				handle_error("Unable to render background.", game);
-		}
-		if (game->map->full[new_y][new_x] == EXIT_OPEN)
-			win_game(game);
-		else
-		{
-			set_new_position(game, new_y, new_x);
-			if (render_player(game) == -1)
-				handle_error("Unable to render the player image.", game);
-			count_moves(game);
-		}
-	}
-}
-
-int	can_move(t_game *game, int new_x, int new_y)
+static int	can_move(t_game *game, int new_x, int new_y)
 {
 	if (new_y < 0 || new_y >= game->map_height || new_x < 0
 		|| new_x >= game->map_width)
@@ -54,7 +22,23 @@ int	can_move(t_game *game, int new_x, int new_y)
 	return (1);
 }
 
-void	ft_hook(void *param)
+static void	set_movement_direction(t_game *game, int *new_x, int *new_y)
+{
+	if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_UP)
+		|| mlx_is_key_down(game->mlx_ptr, MLX_KEY_W))
+		*new_y -= 1;
+	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_DOWN)
+		|| mlx_is_key_down(game->mlx_ptr, MLX_KEY_S))
+		*new_y += 1;
+	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_LEFT)
+		|| mlx_is_key_down(game->mlx_ptr, MLX_KEY_A))
+		*new_x -= 1;
+	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_RIGHT)
+		|| mlx_is_key_down(game->mlx_ptr, MLX_KEY_D))
+		*new_x += 1;
+}
+
+static void	ft_hook(void *param)
 {
 	t_game	*game;
 	int		new_x;
@@ -74,24 +58,14 @@ void	ft_hook(void *param)
 		cleanup_game(game);
 		exit(EXIT_SUCCESS);
 	}
-	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_UP)
-		|| mlx_is_key_down(game->mlx_ptr, MLX_KEY_W))
-		new_y -= 1;
-	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_DOWN)
-		|| mlx_is_key_down(game->mlx_ptr, MLX_KEY_S))
-		new_y += 1;
-	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_LEFT)
-		|| mlx_is_key_down(game->mlx_ptr, MLX_KEY_A))
-		new_x -= 1;
-	else if (mlx_is_key_down(game->mlx_ptr, MLX_KEY_RIGHT)
-		|| mlx_is_key_down(game->mlx_ptr, MLX_KEY_D))
-		new_x += 1;
+	set_movement_direction(game, &new_x, &new_y);
 	if (can_move(game, new_x, new_y)
 		&& (new_x != game->map->player.x || new_y != game->map->player.y))
 		update_player_position(game, new_x, new_y);
 	game->move_cooldown = MOVE_DELAY;
 }
 
+// Manages MLS loops and everything related to movement and changes.
 void	manage_motion(t_game *game)
 {
 	mlx_loop_hook(game->mlx_ptr, ft_hook, game);

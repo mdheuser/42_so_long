@@ -6,24 +6,12 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 14:58:48 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/29 17:28:35 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/30 13:52:28 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-/////////////////// FOR DEBUGGING
-/*
-void print_map(t_game *game)
-{
-	int y = 0;
-	while (y < game->map_height)
-	{
-		ft_printf("%s\n", game->map->full[y]);
-		y++;
-	}
-}
-*/
 int	main(int argc, char **argv)
 {
 	t_game	*game;

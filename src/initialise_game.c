@@ -6,12 +6,13 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:22:01 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/29 18:32:49 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/30 16:00:59 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
+// Initialise all variables abd pointers before they are assigned.
 static void	initialise_vars(t_game *game)
 {
 	game->mlx_ptr = NULL;
@@ -29,6 +30,7 @@ static void	initialise_vars(t_game *game)
 	game->exit_count = 0;
 }
 
+// Opens game window
 static void	init_mlx_window(t_game *game)
 {
 	game->mlx_ptr = mlx_init((game->map_width) * TILESIZE, game->map_height
@@ -37,7 +39,8 @@ static void	init_mlx_window(t_game *game)
 		handle_error("Unable to create game window.", game);
 }
 
-// ATTENTION! This function also turns the initial 
+// Finds player's starting point.
+// This function also turns the initial 
 // player position into a background tile!
 static int	find_player_position(t_game *game)
 {
@@ -64,6 +67,7 @@ static int	find_player_position(t_game *game)
 	return (0);
 }
 
+// Initialises all game elements before the MLX loop.
 int	initialise_game(t_game *game, char *map_name)
 {
 	initialise_vars(game);

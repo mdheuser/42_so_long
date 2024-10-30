@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 14:08:58 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/29 18:54:15 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/30 16:12:45 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ static void	render_tile(t_game *game, char tile, int y, int x)
 	}
 }
 
-// Covers entire window with background image
+// Covers entire window with background image before rendering 
+// the remaining game elements.
 static void	cover_background(t_game *game)
 {
 	int		x;
@@ -51,6 +52,8 @@ static void	cover_background(t_game *game)
 	}
 }
 
+// Renders all game elements on top of the background image
+// except for the player.
 void	render_static_map(t_game *game)
 {
 	int		x;

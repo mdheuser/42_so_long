@@ -6,12 +6,13 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:38:31 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/29 18:55:57 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/30 16:14:18 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include  "so_long.h"
 
+// Counts how many Pac-Men were killed
 void	keep_score(t_game *game)
 {
 	game->score--;
@@ -25,6 +26,8 @@ void	keep_score(t_game *game)
 		ft_printf("\n\nOne Pac-Man left to kill!\n~~~KILL THEM ALL!~~~\n\n");
 }
 
+// Counts every movement from one tile to the next:
+// Up, down, left, and right. No diagonal movements.
 void	count_moves(t_game *game)
 {
 	ft_printf("Moves: %d\n", game->move_count++);

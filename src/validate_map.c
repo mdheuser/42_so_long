@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 15:23:40 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/29 18:16:20 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/30 16:17:40 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static int	check_tile(t_game *game, char tile)
 	return (1);
 }
 
-// Checks for valid characters (P E C 0 1),
+// Checks for valid characters (P, E, C, 0, 1),
 // walls (the map should be completely enclosed),
 // number of players (should be 1),
 // number of exits (should be 1).

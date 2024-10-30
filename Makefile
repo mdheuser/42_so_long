@@ -6,7 +6,7 @@
 #    By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/03 10:08:59 by mdahlstr          #+#    #+#              #
-#    Updated: 2024/10/29 17:35:17 by mdahlstr         ###   ########.fr        #
+#    Updated: 2024/10/30 15:57:07 by mdahlstr         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,8 +15,7 @@ NAME = so_long
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I./mlx/include -Iincludes
 
-# Source files // I can use "addprefix" to mention "./src" only once.
-# SRCS = ./src/main.c ./src/command_line_args.c # ./src/open_map.c
+# Source files // I could use "addprefix" to mention "./src" only once.
 SRCS = ./src/main.c ./src/validate_args.c ./src/read_map.c ./src/get_map_dimensions.c \
 		./src/validate_map.c ./src/render_images.c ./src/render_static_map.c \
 		./src/load_images.c ./src/initialise_game.c ./src/manage_motion.c \
@@ -26,10 +25,8 @@ SRCS = ./src/main.c ./src/validate_args.c ./src/read_map.c ./src/get_map_dimensi
 # Object files (replace .c with .o)
 SO_LONG_OBJS = $(SRCS:.c=.o)
 
-# Libft directory and source files
+# Libft directory
 LIBFT_DIR = ./libs/libft
-LIBFT_SRCS = $(wildcard $(LIBFT_DIR)/*.c)  # Get all .c files in libft // IS THIS FORBIDDEN?
-LIBFT_OBJS = $(LIBFT_SRCS:.c=.o)  # Corresponding .o files
 
 # MLX42 directory and object files
 MLX42_DIR = ./libs/mlx
@@ -47,7 +44,7 @@ MLXLIB_FLAGS = -ldl -lglfw -lm
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Build the libft library
-$(LIBFT_DIR)/libft.a: # $(LIBFT_OBJS)
+$(LIBFT_DIR)/libft.a:
 	$(MAKE) -C $(LIBFT_DIR)
 
 # Clone MLX42, generate build files with CMake, and build it
@@ -55,7 +52,7 @@ $(MLX42_LIB):
 	if [ ! -d "$(MLX42_DIR)" ]; \
 	then git clone https://github.com/codam-coding-college/MLX42.git $(MLX42_DIR); fi
 	mkdir -p $(MLX42_BUILD_DIR)
-	cmake -B $(MLX42_BUILD_DIR) -S $(MLX42_DIR) -DDEBUG=1
+	cmake -B $(MLX42_BUILD_DIR) -S $(MLX42_DIR)
 	cmake --build $(MLX42_BUILD_DIR)
 
 # Rule to create the executable

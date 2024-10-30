@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 18:26:21 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/29 17:21:43 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/30 16:17:21 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,12 @@ static void	validate_file_name(char *map_file_name)
 	}
 }
 
+// Checks for number of arguments and map file extension.
+// Exits without calling cleanup_game,
+// since no memory has been allocated at this point.
+// Prints error messages in 3 cases:
+// (1) Too few arguments, (2) too many arguments and (3) wrong file extension.
+// (should be ".ber").
 void	validate_args(int argc, char *map_file_name)
 {
 	validate_argc(argc);

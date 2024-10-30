@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 14:50:02 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/29 18:46:17 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/30 11:24:49 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,55 +85,30 @@ typedef struct s_game
 	int			exit_count;
 }	t_game;
 
-// validate_args.c
 void	validate_args(int argc, char *map_file_name);
-
-// INITIALISATION /////////////////////////////////////////////////
-// initialise_game.c
 int		initialise_game(t_game *game, char *map_name);
-
-// read_map.c & get_map_dimensions.c
 void	read_map(char *map_file_name, t_game *game);
 size_t	get_map_dimensions(int fd, size_t *width);
-
-// validate_map.c
 void	validate_map(t_game *game);
-
-// validate_path.c
 void	validate_path(t_game *game);
-
-// load_images.c
 void	load_images(t_game *game);
-
-//void	init_mlx_window(t_game *game);
-
-// render_static_map.c and render_images.c
+void	free_images(t_game *game);
+void	free_textures(t_game *game);
 void	render_static_map(t_game *game);
 int		render_background(t_game *game, int y, int x);
 int		render_collectibles(t_game *game, int y, int x);
 int		render_exit(t_game *game, int y, int x);
 int		render_player(t_game *game);
 int		render_walls(t_game *game, int y, int x);
-
-// manage_motion
 void	manage_motion(t_game *game);
+void	update_player_position(t_game *game, int new_x, int new_y);
 void	open_exit(t_game *game);
 void	clear_old_position(t_game *game, int old_y, int old_x);
 void	set_new_position(t_game *game, int new_y, int new_x);
-
-// UTILS ////////////////////////////////////////////////////
-// counters.c
+void	win_game(t_game *game);
 void	keep_score(t_game *game);
 void	count_moves(t_game *game);
 void	handle_error(const char *message, t_game *game);
-
-// Freeing memory
-//void	free_all(t_game *game);
 void	cleanup_game(t_game *game);
-void	free_images(t_game *game);
-void	free_textures(t_game *game);
-
-//win_game.c
-void	win_game(t_game *game);
 
 #endif

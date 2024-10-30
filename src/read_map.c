@@ -6,14 +6,14 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 19:22:42 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/29 18:14:55 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/30 16:11:04 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
 // Open map file
-// Close it if fd is invalid.
+// Close it if file descriptor (fd) is invalid.
 static int	open_map_file(char *map_file_name)
 {
 	int	fd;
@@ -42,7 +42,7 @@ static void	init_map_structure(t_game *game, size_t height)
 	game->map->full = ft_calloc(height, sizeof(char *));
 	if (!game->map->full)
 	{
-		ft_printf("Error\nMemory allocation failed for game->map->full\n");
+		ft_printf("Error\nMemory allocation game->map->full\n");
 		cleanup_game(game);
 		exit(1);
 	}
@@ -52,6 +52,24 @@ static void	init_map_structure(t_game *game, size_t height)
 		game->map->full[i] = NULL;
 		i++;
 	}
+}
+
+// Helper function to handle map_line allocation error
+// related to one edge case in get_next_line
+// where if reading one line failed, the entire map should be
+// read to the end before freeing allocated memory.
+static void	handle_allocation_error(int fd, t_game *game, char *map_line)
+{
+	free(map_line);
+	while (1)
+	{
+		map_line = get_next_line(fd);
+		if (!map_line)
+			break ;
+		free(map_line);
+	}
+	close(fd);
+	handle_error("Memory allocation failed for line.", game);
 }
 
 // Read map line one by one using get_next_line()
@@ -76,16 +94,19 @@ static void	read_map_lines(int fd, t_game *game)
 		}
 		game->map->full[i] = ft_calloc(game->map_width + 1, sizeof(char));
 		if (!game->map->full[i])
-		{
-			free(map_line);
-			handle_error("Memory allocation failed for line.", game);
-		}
+			handle_allocation_error(fd, game, map_line);
 		ft_strlcpy(game->map->full[i], map_line, game->map_width + 1);
 		free(map_line);
 		i++;
 	}
 }
 
+// Get's map dimensions and copies the file map
+// into a 2d array for use in the game.
+// Closes the file descriptor (fd) if valid.
+// Handles error and exits the game if file is too big:
+// Map size limit width: 60, height: 32.
+// (This limit is based on my current computer screen size).
 void	read_map(char *map_file_name, t_game *game)
 {
 	int		fd;
@@ -104,4 +125,6 @@ void	read_map(char *map_file_name, t_game *game)
 	read_map_lines(fd, game);
 	if (fd >= 0)
 		close(fd);
+	if (width > 60 || height > 32)
+		handle_error("The map is too big.", game);
 }

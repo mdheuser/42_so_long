@@ -6,12 +6,13 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 20:00:48 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/29 16:10:29 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/30 15:59:03 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
+// Frees the 2d array that makes up the map.
 static void	free_map(t_game *game)
 {
 	int	i;
@@ -38,6 +39,7 @@ static void	free_map(t_game *game)
 	}
 }
 
+// Frees allocated memory if necessary
 void	cleanup_game(t_game *game)
 {
 	if (!game)

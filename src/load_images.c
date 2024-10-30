@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:13:44 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/29 18:29:19 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/30 16:36:33 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,12 @@ static int	load_textures(t_game *game)
 	game->textures = ft_calloc(1, sizeof(t_textures));
 	if (!game->textures)
 		return (0);
-	game->textures->background = mlx_load_png("imgs/bw_background.png");
-	game->textures->wall = mlx_load_png("imgs/bw_walls2.png");
-	game->textures->collectible = mlx_load_png("imgs/bw_pacman2.png");
-	game->textures->player = mlx_load_png("imgs/bw_ghost2.png");
-	game->textures->exit = mlx_load_png("imgs/bw_exit1.png");
-	game->textures->exit_open = mlx_load_png("imgs/bw_exit2.png");
+	game->textures->background = mlx_load_png("imgs/background.png");
+	game->textures->wall = mlx_load_png("imgs/wall.png");
+	game->textures->collectible = mlx_load_png("imgs/pacman.png");
+	game->textures->player = mlx_load_png("imgs/ghost.png");
+	game->textures->exit = mlx_load_png("imgs/exit1.png");
+	game->textures->exit_open = mlx_load_png("imgs/exit2.png");
 	if (!game->textures->background || !game->textures->wall
 		|| !game->textures->collectible || !game->textures->player
 		|| !game->textures->exit || !game->textures->exit_open)
@@ -102,6 +102,8 @@ static int	textures_to_image(t_game *game)
 	return (1);
 }
 
+// Loads png files into textures and textures into images.
+// Frees textures.
 void	load_images(t_game *game)
 {
 	if (!load_textures(game) || !textures_to_image(game))

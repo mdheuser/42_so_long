@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 13:47:29 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/29 16:31:12 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/30 15:59:53 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static size_t	find_width(char *line)
 	return (line_len);
 }
 
-//Find map height and checks for inconsistency between line widths
+// Find map height and checks for inconsistency between line widths
 static size_t	find_height(int fd, char *line, size_t height, size_t *width)
 {
 	size_t	line_len;
@@ -49,6 +49,7 @@ static size_t	find_height(int fd, char *line, size_t height, size_t *width)
 	return (height);
 }
 
+// Gets map width and height simultaneously
 size_t	get_map_dimensions(int fd, size_t *width)
 {
 	char	*line;
