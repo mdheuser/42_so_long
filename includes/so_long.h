@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 14:50:02 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/30 11:24:49 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/31 20:00:51 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,7 @@
 
 # include "../libs/libft/libft.h" // includes get_next_line
 # include "../libs/mlx/include/MLX42/MLX42.h" // For MiniLibX functions
-# include <stdio.h> // For printf, perror
 # include <stdlib.h> // For malloc, free, exit
-# include <string.h> // For strerror
 # include <unistd.h> // For read, write, close
 # include <fcntl.h> // For open
 
