@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:38:31 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/30 16:14:18 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/31 14:56:02 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,21 @@ void	keep_score(t_game *game)
 	if (game->score == 0)
 	{
 		open_exit(game);
-		ft_printf("\n\nYou've killed ALL Pac-Men!\nWell done!\n\n");
-		ft_printf("~~~The exit is now open.~~~\n\n");
+		ft_printf("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦\n");
+		ft_printf("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦ You've killed ALL Pac-Men! ▦▦▦▦▦▦▦▦▦▦▦▦▦\n");
+		ft_printf("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦ Well done! ▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦\n");
+		ft_printf("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦\n");
+		ft_printf("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦ The exit is now open. ▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦\n");
+		ft_printf("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦\n");
 	}
 	else if (game->score == 1)
-		ft_printf("\n\nOne Pac-Man left to kill!\n~~~KILL THEM ALL!~~~\n\n");
+	{
+		ft_printf("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦\n");
+		ft_printf("▦▦▦▦▦▦▦▦▦▦▦▦▦▦ One Pac-Man left to kill! ▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦\n");
+		ft_printf("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦\n");
+		ft_printf("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦ KILL THEM ALL! ▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦\n");
+		ft_printf("▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦▦\n");
+	}
 }
 
 // Counts every movement from one tile to the next:

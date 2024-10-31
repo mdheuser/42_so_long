@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 20:00:48 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/30 15:59:03 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/31 12:57:03 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ static void	free_map(t_game *game)
 	}
 }
 
-// Frees allocated memory if necessary
+// Frees all memory that is still allocated up to this point.
 void	cleanup_game(t_game *game)
 {
 	if (!game)

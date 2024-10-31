@@ -6,7 +6,7 @@
 /*   By: mdahlstr <mdahlstr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:22:01 by mdahlstr          #+#    #+#             */
-/*   Updated: 2024/10/30 16:00:59 by mdahlstr         ###   ########.fr       */
+/*   Updated: 2024/10/31 12:55:55 by mdahlstr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	initialise_vars(t_game *game)
 	game->exit_count = 0;
 }
 
-// Opens game window
+// Opens game window.
 static void	init_mlx_window(t_game *game)
 {
 	game->mlx_ptr = mlx_init((game->map_width) * TILESIZE, game->map_height
