@@ -20,10 +20,10 @@ A big map.
 
 ![alt text](readme_imgs/huge.png)
 The biggest possible map on a 3840 x 2160 display.
-Bigger maps will return an error if one tries to run it.
+Bigger maps will return an error if one tries to run them.
 This can be easily changed in the read_map() function in the file with the same name.
 
-'''
+```
 if (width > 60 || height > 32)
 	handle_error("The map is too big.", game);
-'''
+```
