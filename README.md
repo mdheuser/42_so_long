@@ -6,12 +6,12 @@ To run it, copy all the files to a directore and run "make". The MLX42 library w
 
 My project successfully passed evaluation by three human evaluators, achieving the final score of 100 points.
 
-![alt text](tiny.png)
+![alt text](readme_imgs/tiny.png)
 
-![alt text](average.png)
+![alt text](readme_imgs/average.png)
 
-![alt text](big.png)
+![alt text](readme_imgs/big.png)
 
-![alt text](pacman.png)
+![alt text](readme_imgs/pacman.png)
 
-![alt text](huge.png)
+![alt text](readme_imgs/huge.png)
