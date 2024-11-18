@@ -18,6 +18,9 @@ Pac-Man-inspired maze.
 ![alt text](readme_imgs/big.png)
 A big map.
 
+![alt text](readme_imgs/big2.png)
+Another big map.
+
 ![alt text](readme_imgs/huge.png)
 The biggest possible map on a 3840 x 2160 display.
 Bigger maps will return an error if one tries to run them.
