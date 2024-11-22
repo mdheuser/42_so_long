@@ -1,4 +1,4 @@
-# So_Long
+# So_Long / PAC-GHOST
 
 was developed as a part of the curriculum at HIVE Helsinki, a coding school affiliated with the 42 network of coding schools headquartered in Paris.
 
