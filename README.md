@@ -18,7 +18,7 @@ Average-sized map.
 Pac-Man-inspired maze.
 
 ![alt text](readme_imgs/big.png)
-A big map.
+A big map, also inspired by Pac-MAn.
 
 ![alt text](readme_imgs/big2.png)
 Another big map.
