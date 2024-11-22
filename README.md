@@ -1,4 +1,5 @@
-#So_Long
+# So_Long
+
 was developed as a part of the curriculum at HIVE Helsinki, a coding school affiliated with the 42 network of coding schools headquartered in Paris.
 
 My implementation of the game uses the characters from Pac-Man but with reversed roles. In PAC-GHOST, the ghost is the main character and it has to kill as many Pac-Men as possible before leaving the maze through a staircase. 
